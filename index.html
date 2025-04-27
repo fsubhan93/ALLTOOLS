@@ -2,397 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Tools - Ultimate Conversion Toolkit</title>
-    <style>
-        :root {
-            --primary-color: #4a6bff;
-            --secondary-color: #f8f9fa;
-            --text-color: #333;
-            --light-text: #777;
-            --border-color: #ddd;
-            --category-color: #f0f7ff;
-            --tool-hover: #f5f5f5;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: var(--light-text);
-            font-size: 1.1rem;
-        }
-
-        .category {
-            background-color: var(--category-color);
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 30px 0 15px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .category i {
-            margin-right: 10px;
-            font-size: 1.3rem;
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-
-        .tool-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .tool-card:hover {
-            background-color: var(--tool-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .tool-card h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .tool-card p {
-            margin: 0;
-            color: var(--light-text);
-            font-size: 0.9rem;
-        }
-
-        .coming-soon {
-            display: inline-block;
-            background-color: #ffeb3b;
-            color: #333;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            margin-left: 5px;
-            font-weight: bold;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            color: var(--light-text);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>All Tools</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>All Tools</h1>
-        <p class="subtitle">Your ultimate collection of productivity tools</p>
-    </header>
 
-    <!-- Document Converters -->
-    <div class="category">
-        <i class="fas fa-file-alt"></i> Document Converters
-    </div>
-    <div class="tools-grid">
-        <div class="tool-card">
-            <h3>PDF to DOC (Word) Converter</h3>
-            <p>Convert PDF files to editable Word documents</p>
-        </div>
-        <div class="tool-card">
-            <h3>DOC (Word) to PDF Converter</h3>
-            <p>Convert Word documents to PDF format</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF to PPT (PowerPoint) Converter</h3>
-            <p>Convert PDF to editable PowerPoint presentations</p>
-        </div>
-        <div class="tool-card">
-            <h3>PPT to PDF Converter</h3>
-            <p>Convert PowerPoint slides to PDF documents</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF to Excel Converter</h3>
-            <p>Extract tables from PDF to Excel spreadsheets</p>
-        </div>
-        <div class="tool-card">
-            <h3>Excel to PDF Converter</h3>
-            <p>Convert Excel files to PDF format</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF to TXT (Text) Converter</h3>
-            <p>Extract text from PDF files</p>
-        </div>
-        <div class="tool-card">
-            <h3>TXT to PDF Converter</h3>
-            <p>Convert text files to PDF documents</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF to EPUB Converter <span class="coming-soon">Soon</span></h3>
-            <p>Convert PDF files to EPUB e-book format</p>
-        </div>
-        <div class="tool-card">
-            <h3>EPUB to PDF Converter <span class="coming-soon">Soon</span></h3>
-            <p>Convert EPUB e-books to PDF format</p>
-        </div>
-        <div class="tool-card">
-            <h3>Word to HTML Converter</h3>
-            <p>Convert Word documents to HTML web pages</p>
-        </div>
-        <div class="tool-card">
-            <h3>HTML to Word Converter</h3>
-            <p>Convert HTML files to editable Word documents</p>
-        </div>
+    <h1 class="title">🔧 All Tools</h1>
+    <p class="subtitle">Your collection of productivity tools</p>
+
+    <div class="tools-section" id="document-converters">
+        <h2>Document Converters</h2>
+        <div class="tools-grid" id="docTools"></div>
     </div>
 
-    <!-- Image Converters -->
-    <div class="category">
-        <i class="fas fa-image"></i> Image Converters
-    </div>
-    <div class="tools-grid">
-        <div class="tool-card">
-            <h3>JPG to PNG Converter</h3>
-            <p>Convert JPG images to PNG format</p>
-        </div>
-        <div class="tool-card">
-            <h3>PNG to JPG Converter</h3>
-            <p>Convert PNG images to JPG format</p>
-        </div>
-        <div class="tool-card">
-            <h3>JPG to PDF Converter</h3>
-            <p>Convert JPG images to PDF documents</p>
-        </div>
-        <div class="tool-card">
-            <h3>PNG to PDF Converter</h3>
-            <p>Convert PNG images to PDF documents</p>
-        </div>
-        <div class="tool-card">
-            <h3>GIF to JPG Converter</h3>
-            <p>Convert GIF animations to JPG images</p>
-        </div>
-        <div class="tool-card">
-            <h3>GIF to MP4 Converter</h3>
-            <p>Convert animated GIFs to MP4 videos</p>
-        </div>
-        <div class="tool-card">
-            <h3>BMP to JPG Converter</h3>
-            <p>Convert BMP images to JPG format</p>
-        </div>
-        <div class="tool-card">
-            <h3>WebP to JPG Converter</h3>
-            <p>Convert WebP images to JPG format</p>
-        </div>
-        <div class="tool-card">
-            <h3>SVG to PNG Converter</h3>
-            <p>Convert SVG vector images to PNG</p>
-        </div>
-        <div class="tool-card">
-            <h3>HEIC to JPG Converter</h3>
-            <p>Convert iPhone HEIC photos to JPG</p>
-        </div>
+    <div class="tools-section" id="image-converters">
+        <h2>Image Converters</h2>
+        <div class="tools-grid" id="imgTools"></div>
     </div>
 
-    <!-- Video Converters -->
-    <div class="category">
-        <i class="fas fa-video"></i> Video Converters
-    </div>
-    <div class="tools-grid">
-        <div class="tool-card">
-            <h3>MP4 to MP3 Converter</h3>
-            <p>Extract audio from MP4 videos</p>
-        </div>
-        <div class="tool-card">
-            <h3>MOV to MP4 Converter</h3>
-            <p>Convert MOV videos to MP4 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>AVI to MP4 Converter</h3>
-            <p>Convert AVI videos to MP4 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>MKV to MP4 Converter</h3>
-            <p>Convert MKV videos to MP4 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>WMV to MP4 Converter</h3>
-            <p>Convert WMV videos to MP4 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>FLV to MP4 Converter</h3>
-            <p>Convert FLV videos to MP4 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>WebM to MP4 Converter</h3>
-            <p>Convert WebM videos to MP4 format</p>
-        </div>
+    <div class="tools-section" id="video-converters">
+        <h2>Video Converters</h2>
+        <div class="tools-grid" id="vidTools"></div>
     </div>
 
-    <!-- Audio Converters -->
-    <div class="category">
-        <i class="fas fa-music"></i> Audio Converters
-    </div>
-    <div class="tools-grid">
-        <div class="tool-card">
-            <h3>MP3 to WAV Converter</h3>
-            <p>Convert MP3 files to WAV format</p>
-        </div>
-        <div class="tool-card">
-            <h3>WAV to MP3 Converter</h3>
-            <p>Convert WAV files to MP3 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>M4A to MP3 Converter</h3>
-            <p>Convert M4A files to MP3 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>OGG to MP3 Converter</h3>
-            <p>Convert OGG files to MP3 format</p>
-        </div>
-        <div class="tool-card">
-            <h3>FLAC to MP3 Converter</h3>
-            <p>Convert FLAC files to MP3 format</p>
-        </div>
+    <div class="tools-section" id="audio-converters">
+        <h2>Audio Converters</h2>
+        <div class="tools-grid" id="audioTools"></div>
     </div>
 
-    <!-- Archive and Compression Tools -->
-    <div class="category">
-        <i class="fas fa-file-archive"></i> Archive and Compression Tools
-    </div>
-    <div class="tools-grid">
-        <div class="tool-card">
-            <h3>RAR to ZIP Converter</h3>
-            <p>Convert RAR archives to ZIP format</p>
-        </div>
-        <div class="tool-card">
-            <h3>ZIP to RAR Converter</h3>
-            <p>Convert ZIP archives to RAR format</p>
-        </div>
-        <div class="tool-card">
-            <h3>7Z to ZIP Converter</h3>
-            <p>Convert 7Z archives to ZIP format</p>
-        </div>
-        <div class="tool-card">
-            <h3>Archive Extractor</h3>
-            <p>Extract RAR, ZIP, 7Z, TAR files</p>
-        </div>
+    <div class="tools-section" id="archive-tools">
+        <h2>Archive & Compression Tools</h2>
+        <div class="tools-grid" id="archiveTools"></div>
     </div>
 
-    <!-- Other Useful Tools -->
-    <div class="category">
-        <i class="fas fa-tools"></i> Other Useful Tools
-    </div>
-    <div class="tools-grid">
-        <div class="tool-card">
-            <h3>Image Resizer</h3>
-            <p>Resize images to specific dimensions</p>
-        </div>
-        <div class="tool-card">
-            <h3>Image Compressor</h3>
-            <p>Reduce image file size without losing quality</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF Compressor</h3>
-            <p>Reduce PDF file size</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF Merger</h3>
-            <p>Combine multiple PDFs into one</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF Splitter</h3>
-            <p>Split a PDF into multiple documents</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF Unlocker</h3>
-            <p>Remove password protection from PDFs</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF Protector</h3>
-            <p>Add password protection to PDFs</p>
-        </div>
-        <div class="tool-card">
-            <h3>Watermark Adder</h3>
-            <p>Add watermarks to PDFs and images</p>
-        </div>
-        <div class="tool-card">
-            <h3>PDF Page Rotator</h3>
-            <p>Rotate pages in PDF documents</p>
-        </div>
-        <div class="tool-card">
-            <h3>Online OCR</h3>
-            <p>Convert images to editable text</p>
-        </div>
-        <div class="tool-card">
-            <h3>Font Converter</h3>
-            <p>Convert between font formats (TTF, WOFF)</p>
-        </div>
-        <div class="tool-card">
-            <h3>Color Converter</h3>
-            <p>Convert between HEX, RGB, CMYK</p>
-        </div>
-        <div class="tool-card">
-            <h3>Unit Converters</h3>
-            <p>Convert length, weight, temperature</p>
-        </div>
+    <div class="tools-section" id="other-tools">
+        <h2>Other Useful Tools</h2>
+        <div class="tools-grid" id="otherTools"></div>
     </div>
 
-    <footer>
-        <p>&copy; 2023 All Tools. All rights reserved.</p>
-    </footer>
+    <script src="script.js"></script>
 
-    <script>
-        // This will be used to handle tool functionality
-        document.querySelectorAll('.tool-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const toolName = this.querySelector('h3').textContent;
-                if (toolName.includes('Soon')) {
-                    alert('This tool is coming soon!');
-                } else {
-                    // For now just show an alert
-                    // In a real implementation, this would open the tool
-                    alert(`Launching: ${toolName}\n\nThis is a demo. In a real implementation, this would open the actual tool.`);
-                    
-                    // Example of how you would redirect to a tool:
-                    // window.location.href = `/tools/${toolName.toLowerCase().replace(/ /g, '-')}/`;
-                }
-            });
-        });
-    </script>
 </body>
 </html>

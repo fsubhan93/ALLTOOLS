@@ -1,460 +1,91 @@
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize jsPDF
-    const { jsPDF } = window.jspdf;
-    
-    // DOM elements
-    const dropArea = document.getElementById('dropArea');
-    const fileInput = document.getElementById('fileInput');
-    const selectFilesBtn = document.getElementById('selectFiles');
-    const clearAllBtn = document.getElementById('clearAll');
-    const generatePdfBtn = document.getElementById('generatePdf');
-    const previewContainer = document.getElementById('previewContainer');
-    const imageList = document.getElementById('imageList');
-    
-    // Settings elements
-    const pageSizeSelect = document.getElementById('pageSize');
-    const customSizeGroup = document.getElementById('customSizeGroup');
-    const customWidthInput = document.getElementById('customWidth');
-    const customHeightInput = document.getElementById('customHeight');
-    const pageOrientationSelect = document.getElementById('pageOrientation');
-    const marginSizeSlider = document.getElementById('marginSize');
-    const marginValueSpan = document.getElementById('marginValue');
-    const borderStyleSelect = document.getElementById('borderStyle');
-    const borderColorInput = document.getElementById('borderColor');
-    const borderWidthSlider = document.getElementById('borderWidth');
-    const borderWidthValueSpan = document.getElementById('borderWidthValue');
-    const imageFitSelect = document.getElementById('imageFit');
-    const pdfNameInput = document.getElementById('pdfName');
-    
-    // Store uploaded images
-    let uploadedImages = [];
-    
-    // Event listeners for drag and drop
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-    });
-    
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, highlight, false);
-    });
-    
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, unhighlight, false);
-    });
-    
-    function highlight() {
-        dropArea.classList.add('highlight');
-    }
-    
-    function unhighlight() {
-        dropArea.classList.remove('highlight');
-    }
-    
-    dropArea.addEventListener('drop', handleDrop, false);
-    
-    function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        handleFiles(files);
-    }
-    
-    // File input click
-    selectFilesBtn.addEventListener('click', () => {
-        fileInput.click();
-    });
-    
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length) {
-            handleFiles(fileInput.files);
-        }
-    });
-    
-    // Clear all button
-    clearAllBtn.addEventListener('click', () => {
-        uploadedImages = [];
-        updateImageList();
-        updatePreview();
-        generatePdfBtn.disabled = true;
-    });
-    
-    // Generate PDF button
-    generatePdfBtn.addEventListener('click', generatePdf);
-    
-    // Settings change listeners
-    pageSizeSelect.addEventListener('change', function() {
-        customSizeGroup.style.display = this.value === 'custom' ? 'block' : 'none';
-        updatePreview();
-    });
-    
-    pageOrientationSelect.addEventListener('change', updatePreview);
-    marginSizeSlider.addEventListener('input', function() {
-        marginValueSpan.textContent = `${this.value} mm`;
-        updatePreview();
-    });
-    
-    borderStyleSelect.addEventListener('change', updatePreview);
-    borderColorInput.addEventListener('change', updatePreview);
-    borderWidthSlider.addEventListener('input', function() {
-        borderWidthValueSpan.textContent = `${this.value} px`;
-        updatePreview();
-    });
-    
-    imageFitSelect.addEventListener('change', updatePreview);
-    
-    // Handle uploaded files
-    function handleFiles(files) {
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            
-            // Check if file is an image
-            if (!file.type.match('image.*')) {
-                continue;
-            }
-            
-            const reader = new FileReader();
-            
-            reader.onload = (function(theFile) {
-                return function(e) {
-                    uploadedImages.push({
-                        name: theFile.name,
-                        size: formatFileSize(theFile.size),
-                        dataUrl: e.target.result
-                    });
-                    
-                    // Update UI after all files are processed
-                    if (uploadedImages.length === files.length) {
-                        updateImageList();
-                        updatePreview();
-                        generatePdfBtn.disabled = false;
-                    }
-                };
-            })(file);
-            
-            reader.readAsDataURL(file);
-        }
-    }
-    
-    // Format file size
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-    
-    // Update image list in UI
-    function updateImageList() {
-        imageList.innerHTML = '';
-        
-        if (uploadedImages.length === 0) {
-            imageList.innerHTML = '<p class="empty-message">No images uploaded yet</p>';
-            return;
-        }
-        
-        uploadedImages.forEach((image, index) => {
-            const imageItem = document.createElement('div');
-            imageItem.className = 'image-item';
-            
-            imageItem.innerHTML = `
-                <img src="${image.dataUrl}" alt="${image.name}">
-                <div class="image-info">
-                    <div class="image-name" title="${image.name}">${image.name}</div>
-                    <div class="image-size">${image.size}</div>
-                    <div class="image-actions">
-                        <button class="move-up" data-index="${index}"><i class="fas fa-arrow-up"></i> Up</button>
-                        <button class="move-down" data-index="${index}"><i class="fas fa-arrow-down"></i> Down</button>
-                        <button class="delete" data-index="${index}"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                </div>
-            `;
-            
-            imageList.appendChild(imageItem);
-        });
-        
-        // Add event listeners for action buttons
-        document.querySelectorAll('.move-up').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.getAttribute('data-index'));
-                if (index > 0) {
-                    [uploadedImages[index], uploadedImages[index - 1]] = [uploadedImages[index - 1], uploadedImages[index]];
-                    updateImageList();
-                    updatePreview();
-                }
-            });
-        });
-        
-        document.querySelectorAll('.move-down').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.getAttribute('data-index'));
-                if (index < uploadedImages.length - 1) {
-                    [uploadedImages[index], uploadedImages[index + 1]] = [uploadedImages[index + 1], uploadedImages[index]];
-                    updateImageList();
-                    updatePreview();
-                }
-            });
-        });
-        
-        document.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.getAttribute('data-index'));
-                uploadedImages.splice(index, 1);
-                updateImageList();
-                updatePreview();
-                if (uploadedImages.length === 0) {
-                    generatePdfBtn.disabled = true;
-                }
-            });
-        });
-    }
-    
-    // Update preview
-    function updatePreview() {
-        if (uploadedImages.length === 0) {
-            previewContainer.innerHTML = '<p>No images selected yet</p>';
-            return;
-        }
-        
-        // Show the first image as preview
-        const img = new Image();
-        img.src = uploadedImages[0].dataUrl;
-        
-        img.onload = function() {
-            const previewWidth = previewContainer.clientWidth - 40;
-            const previewHeight = 200;
-            
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Set canvas size
-            canvas.width = previewWidth;
-            canvas.height = previewHeight;
-            
-            // Draw white background
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Calculate page dimensions in pixels for preview (approximate)
-            const pageSize = getPageSizeInPixels();
-            const marginPx = (marginSizeSlider.value / 25.4) * 96; // mm to pixels (approximate)
-            
-            // Calculate preview dimensions
-            const previewPageWidth = previewWidth - 40;
-            const previewPageHeight = (previewPageWidth / pageSize.width) * pageSize.height;
-            
-            // Draw page border
-            const borderX = (previewWidth - previewPageWidth) / 2;
-            const borderY = (previewHeight - previewPageHeight) / 2;
-            
-            if (borderStyleSelect.value !== 'none') {
-                ctx.strokeStyle = borderColorInput.value;
-                ctx.lineWidth = parseInt(borderWidthSlider.value);
-                
-                if (borderStyleSelect.value === 'dotted') {
-                    ctx.setLineDash([2, 3]);
-                } else if (borderStyleSelect.value === 'dashed') {
-                    ctx.setLineDash([5, 3]);
-                } else if (borderStyleSelect.value === 'double') {
-                    ctx.setLineDash([]);
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(borderX - 2, borderY - 2, previewPageWidth + 4, previewPageHeight + 4);
-                    ctx.strokeRect(borderX + 2, borderY + 2, previewPageWidth - 4, previewPageHeight - 4);
-                    previewContainer.innerHTML = '';
-                    previewContainer.appendChild(canvas);
-                    return;
-                } else {
-                    ctx.setLineDash([]);
-                }
-                
-                ctx.strokeRect(borderX, borderY, previewPageWidth, previewPageHeight);
-            }
-            
-            // Calculate image area inside margins
-            const imageAreaWidth = previewPageWidth - (marginPx * 2);
-            const imageAreaHeight = previewPageHeight - (marginPx * 2);
-            
-            // Calculate image position and dimensions based on fit option
-            let drawWidth, drawHeight, drawX, drawY;
-            
-            if (imageFitSelect.value === 'fill') {
-                // Fill the entire area
-                drawWidth = imageAreaWidth;
-                drawHeight = imageAreaHeight;
-                drawX = borderX + marginPx;
-                drawY = borderY + marginPx;
-            } else if (imageFitSelect.value === 'fit') {
-                // Fit while maintaining aspect ratio
-                const scale = Math.min(
-                    imageAreaWidth / img.width,
-                    imageAreaHeight / img.height
-                );
-                drawWidth = img.width * scale;
-                drawHeight = img.height * scale;
-                drawX = borderX + marginPx + (imageAreaWidth - drawWidth) / 2;
-                drawY = borderY + marginPx + (imageAreaHeight - drawHeight) / 2;
-            } else {
-                // Center (original size)
-                drawWidth = Math.min(img.width, imageAreaWidth);
-                drawHeight = Math.min(img.height, imageAreaHeight);
-                drawX = borderX + marginPx + (imageAreaWidth - drawWidth) / 2;
-                drawY = borderY + marginPx + (imageAreaHeight - drawHeight) / 2;
-            }
-            
-            // Draw image
-            ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-            
-            // Add to preview container
-            previewContainer.innerHTML = '';
-            previewContainer.appendChild(canvas);
-            
-            // Add page count info
-            const pageCountInfo = document.createElement('p');
-            pageCountInfo.style.marginTop = '10px';
-            pageCountInfo.style.fontSize = '14px';
-            pageCountInfo.style.color = 'var(--light-text)';
-            pageCountInfo.textContent = `Preview of 1/${uploadedImages.length} images`;
-            previewContainer.appendChild(pageCountInfo);
-        };
-    }
-    
-    // Get page size in millimeters
-    function getPageSizeInMM() {
-        let width, height;
-        
-        switch (pageSizeSelect.value) {
-            case 'a4':
-                width = 210;
-                height = 297;
-                break;
-            case 'letter':
-                width = 215.9;
-                height = 279.4;
-                break;
-            case 'legal':
-                width = 215.9;
-                height = 355.6;
-                break;
-            case 'custom':
-                width = parseFloat(customWidthInput.value) || 210;
-                height = parseFloat(customHeightInput.value) || 297;
-                break;
-            default:
-                width = 210;
-                height = 297;
-        }
-        
-        if (pageOrientationSelect.value === 'landscape') {
-            return { width: Math.max(width, height), height: Math.min(width, height) };
-        } else {
-            return { width: Math.min(width, height), height: Math.max(width, height) };
-        }
-    }
-    
-    // Get page size in pixels (approximate for preview)
-    function getPageSizeInPixels() {
-        const sizeMM = getPageSizeInMM();
-        // Approximate conversion (96 DPI)
-        return {
-            width: (sizeMM.width / 25.4) * 96,
-            height: (sizeMM.height / 25.4) * 96
-        };
-    }
-    
-    // Generate PDF
-    async function generatePdf() {
-        if (uploadedImages.length === 0) return;
-        
-        const pdfName = pdfNameInput.value.trim() || 'output.pdf';
-        const pdf = new jsPDF({
-            orientation: pageOrientationSelect.value,
-            unit: 'mm'
-        });
-        
-        const pageSize = getPageSizeInMM();
-        const margin = parseFloat(marginSizeSlider.value);
-        
-        // Process each image
-        for (let i = 0; i < uploadedImages.length; i++) {
-            if (i > 0) {
-                pdf.addPage([pageSize.width, pageSize.height], pageOrientationSelect.value);
-            }
-            
-            const img = await loadImage(uploadedImages[i].dataUrl);
-            
-            // Calculate image area
-            const imageAreaWidth = pageSize.width - (margin * 2);
-            const imageAreaHeight = pageSize.height - (margin * 2);
-            
-            // Calculate image position and dimensions
-            let imgWidth, imgHeight, x, y;
-            
-            if (imageFitSelect.value === 'fill') {
-                // Fill the entire area
-                imgWidth = imageAreaWidth;
-                imgHeight = imageAreaHeight;
-                x = margin;
-                y = margin;
-            } else if (imageFitSelect.value === 'fit') {
-                // Fit while maintaining aspect ratio
-                const scale = Math.min(
-                    imageAreaWidth / img.width,
-                    imageAreaHeight / img.height
-                );
-                imgWidth = img.width * scale;
-                imgHeight = img.height * scale;
-                x = margin + (imageAreaWidth - imgWidth) / 2;
-                y = margin + (imageAreaHeight - imgHeight) / 2;
-            } else {
-                // Center (original size)
-                imgWidth = Math.min(img.width, imageAreaWidth);
-                imgHeight = Math.min(img.height, imageAreaHeight);
-                x = margin + (imageAreaWidth - imgWidth) / 2;
-                y = margin + (imageAreaHeight - imgHeight) / 2;
-            }
-            
-            // Add image to PDF
-            pdf.addImage(img, 'JPEG', x, y, imgWidth, imgHeight);
-            
-            // Add border if enabled
-            if (borderStyleSelect.value !== 'none') {
-                pdf.setDrawColor(borderColorInput.value);
-                pdf.setLineWidth(parseInt(borderWidthSlider.value) / 3); // Convert px to mm (approximate)
-                
-                if (borderStyleSelect.value === 'dotted') {
-                    pdf.setLineDashPattern([1, 1]);
-                } else if (borderStyleSelect.value === 'dashed') {
-                    pdf.setLineDashPattern([3, 2]);
-                } else if (borderStyleSelect.value === 'double') {
-                    pdf.setLineDashPattern([]);
-                    pdf.setLineWidth(0.3);
-                    pdf.rect(0.5, 0.5, pageSize.width - 1, pageSize.height - 1);
-                    pdf.rect(1.5, 1.5, pageSize.width - 3, pageSize.height - 3);
-                    continue;
-                } else {
-                    pdf.setLineDashPattern([]);
-                }
-                
-                pdf.rect(0, 0, pageSize.width, pageSize.height);
-            }
-        }
-        
-        // Save PDF
-        pdf.save(pdfName);
-    }
-    
-    // Helper function to load image
-    function loadImage(src) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = reject;
-            img.src = src;
-        });
-    }
-});
+// Define all tools with unique icons
+const tools = {
+  "docTools": [
+    { name: "PDF to DOC", link: "tools/pdf-to-doc.html", icon: "icons/pdf.png" },
+    { name: "DOC to PDF", link: "tools/doc.png", icon: "icons/doc.png" },
+    { name: "PDF to PPT", link: "tools/pdf-to-ppt.html", icon: "icons/ppt.png" },
+    { name: "PPT to PDF", link: "tools/ppt-to-pdf.html", icon: "icons/pdf.png" },
+    { name: "PDF to Excel", link: "tools/pdf-to-excel.html", icon: "icons/excel.png" },
+    { name: "Excel to PDF", link: "tools/excel-to-pdf.html", icon: "icons/pdf.png" },
+    { name: "PDF to TXT", link: "tools/pdf-to-txt.html", icon: "icons/txt.png" },
+    { name: "TXT to PDF", link: "tools/txt-to-pdf.html", icon: "icons/pdf.png" },
+    { name: "PDF to EPUB", link: "tools/pdf-to-epub.html", icon: "icons/epub.png" },
+    { name: "EPUB to PDF", link: "tools/epub-to-pdf.html", icon: "icons/pdf.png" },
+    { name: "Word to HTML", link: "tools/word-to-html.html", icon: "icons/html.png" },
+    { name: "HTML to Word", link: "tools/html-to-word.html", icon: "icons/word.png" }
+  ],
+  
+  "imgTools": [
+    { name: "JPG to PNG", link: "tools/jpg-to-png.html", icon: "icons/image.png" },
+    { name: "PNG to JPG", link: "tools/png-to-jpg.html", icon: "icons/image.png" },
+    { name: "JPG to PDF", link: "tools/jpg-to-pdf.html", icon: "icons/pdf.png" },
+    { name: "PNG to PDF", link: "tools/png-to-pdf.html", icon: "icons/pdf.png" },
+    { name: "GIF to JPG", link: "tools/gif-to-jpg.html", icon: "icons/gif.png" },
+    { name: "GIF to MP4", link: "tools/gif-to-mp4.html", icon: "icons/video.png" },
+    { name: "BMP to JPG", link: "tools/bmp-to-jpg.html", icon: "icons/image.png" },
+    { name: "WebP to JPG", link: "tools/webp-to-jpg.html", icon: "icons/image.png" },
+    { name: "SVG to PNG", link: "tools/svg-to-png.html", icon: "icons/image.png" },
+    { name: "HEIC to JPG", link: "tools/heic-to-jpg.html", icon: "icons/image.png" }
+  ],
+
+  "vidTools": [
+    { name: "MP4 to MP3", link: "tools/mp4-to-mp3.html", icon: "icons/video.png" },
+    { name: "MOV to MP4", link: "tools/mov-to-mp4.html", icon: "icons/video.png" },
+    { name: "AVI to MP4", link: "tools/avi-to-mp4.html", icon: "icons/video.png" },
+    { name: "MKV to MP4", link: "tools/mkv-to-mp4.html", icon: "icons/video.png" },
+    { name: "WMV to MP4", link: "tools/wmv-to-mp4.html", icon: "icons/video.png" },
+    { name: "FLV to MP4", link: "tools/flv-to-mp4.html", icon: "icons/video.png" },
+    { name: "WebM to MP4", link: "tools/webm-to-mp4.html", icon: "icons/video.png" }
+  ],
+
+  "audioTools": [
+    { name: "MP3 to WAV", link: "tools/mp3-to-wav.html", icon: "icons/audio.png" },
+    { name: "WAV to MP3", link: "tools/wav-to-mp3.html", icon: "icons/audio.png" },
+    { name: "M4A to MP3", link: "tools/m4a-to-mp3.html", icon: "icons/audio.png" },
+    { name: "OGG to MP3", link: "tools/ogg-to-mp3.html", icon: "icons/audio.png" },
+    { name: "FLAC to MP3", link: "tools/flac-to-mp3.html", icon: "icons/audio.png" }
+  ],
+
+  "archiveTools": [
+    { name: "RAR to ZIP", link: "tools/rar-to-zip.html", icon: "icons/archive.png" },
+    { name: "ZIP to RAR", link: "tools/zip-to-rar.html", icon: "icons/archive.png" },
+    { name: "7Z to ZIP", link: "tools/7z-to-zip.html", icon: "icons/archive.png" },
+    { name: "Extract Files", link: "tools/extract-files.html", icon: "icons/extract.png" }
+  ],
+
+  "otherTools": [
+    { name: "Image Resizer", link: "tools/image-resizer.html", icon: "icons/resize.png" },
+    { name: "Image Compressor", link: "tools/image-compressor.html", icon: "icons/compress.png" },
+    { name: "PDF Compressor", link: "tools/pdf-compressor.html", icon: "icons/pdf.png" },
+    { name: "PDF Merger", link: "tools/pdf-merger.html", icon: "icons/pdf.png" },
+    { name: "PDF Splitter", link: "tools/pdf-splitter.html", icon: "icons/pdf.png" },
+    { name: "PDF Unlocker", link: "tools/pdf-unlocker.html", icon: "icons/unlock.png" },
+    { name: "PDF Protector", link: "tools/pdf-protector.html", icon: "icons/lock.png" },
+    { name: "Watermark Adder", link: "tools/watermark-adder.html", icon: "icons/watermark.png" },
+    { name: "PDF Page Rotator", link: "tools/pdf-rotator.html", icon: "icons/rotate.png" },
+    { name: "Online OCR", link: "tools/online-ocr.html", icon: "icons/ocr.png" },
+    { name: "Font Converter", link: "tools/font-converter.html", icon: "icons/font.png" },
+    { name: "Color Converter", link: "tools/color-converter.html", icon: "icons/color.png" },
+    { name: "Unit Converters", link: "tools/unit-converters.html", icon: "icons/unit.png" }
+  ]
+};
+
+// Function to create cards
+function generateTools(sectionId, toolsList) {
+  const section = document.getElementById(sectionId);
+  toolsList.forEach(tool => {
+    const card = document.createElement("a");
+    card.href = tool.link;
+    card.className = "tool-card";
+    card.innerHTML = `
+      <img src="${tool.icon}" alt="${tool.name}">
+      <h3>${tool.name}</h3>
+    `;
+    section.appendChild(card);
+  });
+}
+
+// Load tools
+for (const [sectionId, toolsList] of Object.entries(tools)) {
+  generateTools(sectionId, toolsList);
+}
