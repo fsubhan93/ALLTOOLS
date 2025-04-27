@@ -1,82 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Tools</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>All Tools</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1><i class="tool-icon"></i> <span class="highlight">All Tools</span></h1>
+
+    <h1 class="title">🔧 All Tools</h1>
     <p class="subtitle">Your collection of productivity tools</p>
 
-    <h2>Document Converters</h2>
-
-    <div class="grid">
-      <button class="tool-button" onclick="launchTool('pdf-to-doc')">
-        <img src="icons/pdf.png" alt="PDF to DOC">
-        <div>PDF to DOC</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('doc-to-pdf')">
-        <img src="icons/doc.png" alt="DOC to PDF">
-        <div>DOC to PDF</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('pdf-to-ppt')">
-        <img src="icons/ppt.png" alt="PDF to PPT">
-        <div>PDF to PPT</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('ppt-to-pdf')">
-        <img src="icons/ppt.png" alt="PPT to PDF">
-        <div>PPT to PDF</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('pdf-to-excel')">
-        <img src="icons/excel.png" alt="PDF to Excel">
-        <div>PDF to Excel</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('excel-to-pdf')">
-        <img src="icons/excel.png" alt="Excel to PDF">
-        <div>Excel to PDF</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('pdf-to-txt')">
-        <img src="icons/txt.png" alt="PDF to TXT">
-        <div>PDF to TXT</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('txt-to-pdf')">
-        <img src="icons/txt.png" alt="TXT to PDF">
-        <div>TXT to PDF</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('pdf-to-epub')">
-        <img src="icons/epub.png" alt="PDF to EPUB">
-        <div>PDF to EPUB</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('epub-to-pdf')">
-        <img src="icons/epub.png" alt="EPUB to PDF">
-        <div>EPUB to PDF</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('word-to-html')">
-        <img src="icons/html.png" alt="Word to HTML">
-        <div>Word to HTML</div>
-      </button>
-
-      <button class="tool-button" onclick="launchTool('html-to-word')">
-        <img src="icons/html.png" alt="HTML to Word">
-        <div>HTML to Word</div>
-      </button>
+    <div class="tools-section" id="document-converters">
+        <h2>Document Converters</h2>
+        <div class="tools-grid" id="docTools"></div>
     </div>
 
-  </div>
+    <div class="tools-section" id="image-converters">
+        <h2>Image Converters</h2>
+        <div class="tools-grid" id="imgTools"></div>
+    </div>
 
-<script src="script.js"></script>
+    <div class="tools-section" id="video-converters">
+        <h2>Video Converters</h2>
+        <div class="tools-grid" id="vidTools"></div>
+    </div>
+
+    <div class="tools-section" id="audio-converters">
+        <h2>Audio Converters</h2>
+        <div class="tools-grid" id="audioTools"></div>
+    </div>
+
+    <div class="tools-section" id="archive-tools">
+        <h2>Archive & Compression Tools</h2>
+        <div class="tools-grid" id="archiveTools"></div>
+    </div>
+
+    <div class="tools-section" id="other-tools">
+        <h2>Other Useful Tools</h2>
+        <div class="tools-grid" id="otherTools"></div>
+    </div>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
