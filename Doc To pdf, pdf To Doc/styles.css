@@ -4,6 +4,9 @@
     --accent: #4895ef;
     --light: #f8f9fa;
     --dark: #212529;
+    --success: #28a745;
+    --error: #dc3545;
+    --processing: #17a2b8;
 }
 
 body {
@@ -112,10 +115,16 @@ input[type="file"] {
     font-size: 16px;
     cursor: pointer;
     transition: background 0.3s;
+    margin-top: 10px;
 }
 
 .convert-btn:hover {
     background: var(--secondary);
+}
+
+.convert-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
 }
 
 .status {
@@ -138,6 +147,30 @@ input[type="file"] {
     display: block;
 }
 
+.status.processing {
+    background: #d1ecf1;
+    color: #0c5460;
+    display: block;
+}
+
+.progress-container {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.3s;
+}
+
 .instructions {
     background: white;
     padding: 20px;
@@ -153,5 +186,14 @@ input[type="file"] {
     
     .converter-box {
         padding: 15px;
+    }
+    
+    .tab {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    .upload-area {
+        padding: 20px;
     }
 }
