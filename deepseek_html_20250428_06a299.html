@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALLTOOLS - Your Complete Online Toolbox</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-size: 1rem;
+        }
+        
+        .search-bar button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0.7rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar button:hover {
+            background: var(--secondary);
+        }
+        
+        .tool-category {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        .category-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .category-title h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .category-icon {
+            margin-right: 1rem;
+            font-size: 2rem;
+            color: var(--accent);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .tool-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .tool-card h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .tool-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-link {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-link:hover {
+            background: var(--secondary);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">ALLTOOLS</div>
+            <div class="tagline">Your complete online toolbox for all conversion needs</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for tools...">
+                <button><i class="fas fa-search"></i> Search</button>
+            </div>
+        </header>
+        
+        <!-- PDF Tools Section -->
+        <section class="tool-category">
+            <div class="category-title">
+                <div class="category-icon"><i class="fas fa-file-pdf"></i></div>
+                <h2>PDF Tools</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>Word ⇄ PDF</h3>
+                    <p>Convert between Word documents and PDF files</p>
+                    <a href="pdf-doc-converter/" class="tool-link">Open Tool</a>
+                </div>
+                <div class="tool-card">
+                    <h3>PDF Merge ⇄ Split</h3>
+                    <p>Combine multiple PDFs or split pages</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>Compress ⇄ Edit PDF</h3>
+                    <p>Reduce PDF size or modify content</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>PDF ⇄ JPG</h3>
+                    <p>Convert PDF pages to images or vice versa</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Image Tools Section -->
+        <section class="tool-category">
+            <div class="category-title">
+                <div class="category-icon"><i class="fas fa-image"></i></div>
+                <h2>Image Tools</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>Resize ⇄ Compress Images</h3>
+                    <p>Change dimensions or reduce file size</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>JPG ⇄ PNG Converter</h3>
+                    <p>Convert between image formats</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Document Tools Section -->
+        <section class="tool-category">
+            <div class="category-title">
+                <div class="category-icon"><i class="fas fa-file-word"></i></div>
+                <h2>Document Tools</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>Word ⇄ PowerPoint</h3>
+                    <p>Convert documents to presentations</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>PowerPoint ⇄ PDF</h3>
+                    <p>Convert slides to PDF or vice versa</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>Excel ⇄ PDF</h3>
+                    <p>Convert spreadsheets to PDF</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Video & Audio Tools Section -->
+        <section class="tool-category">
+            <div class="category-title">
+                <div class="category-icon"><i class="fas fa-video"></i></div>
+                <h2>Video & Audio Tools</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>Video ⇄ MP3</h3>
+                    <p>Extract audio from video files</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>Audio ⇄ Video Converter</h3>
+                    <p>Convert between audio and video formats</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>Trim ⇄ Cut Video/Audio</h3>
+                    <p>Edit your media files online</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Text & Writing Tools Section -->
+        <section class="tool-category">
+            <div class="category-title">
+                <div class="category-icon"><i class="fas fa-pen-fancy"></i></div>
+                <h2>Text & Writing Tools</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>Grammar ⇄ Plagiarism Checker</h3>
+                    <p>Improve your writing quality</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>Summarizer ⇄ Paraphraser</h3>
+                    <p>Condense or reword text content</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Other Useful Converters Section -->
+        <section class="tool-category">
+            <div class="category-title">
+                <div class="category-icon"><i class="fas fa-tools"></i></div>
+                <h2>Other Useful Converters</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>ZIP ⇄ Folder</h3>
+                    <p>Compress or extract archive files</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+                <div class="tool-card">
+                    <h3>Currency ⇄ Unit Converter</h3>
+                    <p>Convert between currencies and units</p>
+                    <a href="#" class="tool-link">Coming Soon</a>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>© 2025 ALLTOOLS | A complete online toolbox for all your needs</p>
+            <p>Contact: support@alltools.com | Terms of Service | Privacy Policy</p>
+        </footer>
+    </div>
+</body>
+</html>
