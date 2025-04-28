@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Word ⇄ PDF Converter | ALLTOOLS</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
@@ -31,6 +32,11 @@
                 </div>
                 <button id="convert-to-pdf" class="convert-btn">Convert to PDF</button>
                 <div class="status" id="word-status"></div>
+                <div class="progress-container" id="word-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress" id="word-progress-bar"></div>
+                    </div>
+                </div>
             </div>
 
             <div id="pdf-to-word" class="tab-content">
@@ -42,6 +48,11 @@
                 </div>
                 <button id="convert-to-word" class="convert-btn">Convert to Word</button>
                 <div class="status" id="pdf-status"></div>
+                <div class="progress-container" id="pdf-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress" id="pdf-progress-bar"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
