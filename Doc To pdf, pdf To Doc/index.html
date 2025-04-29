@@ -1,113 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colorful Word ⇄ PDF Converter</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOC ⇄ PDF Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4a6bff;
+      --secondary-color: #f8f9fa;
+      --text-color: #333;
+      --light-text: #777;
+      --border-color: #ddd;
+      --error-color: #ff4d4f;
+      --success-color: #52c41a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f5f5;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--light-text);
+      margin-bottom: 30px;
+    }
+
+    .converter-box {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 30px;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary-color);
+      background-color: rgba(74, 107, 255, 0.05);
+    }
+
+    .upload-area i {
+      font-size: 48px;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #3a5bef;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .preview-container {
+      margin-top: 20px;
+      font-size: 16px;
+      color: var(--primary-color);
+      text-align: center;
+      min-height: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="converter-card">
-            <div class="header">
-                <div class="logo">
-                    <i class="fas fa-file-pdf"></i>
-                    <h1>DocMagic Converter</h1>
-                </div>
-                <p class="tagline">Transform documents with vibrant ease</p>
-            </div>
+  <div class="container">
+    <h1><i class="fas fa-file-alt"></i> DOC ⇄ PDF Converter</h1>
+    <p class="subtitle">Convert your documents easily and securely</p>
 
-            <div class="converter-tabs">
-                <button class="tab-btn active gradient-blue" id="wordToPdfBtn">
-                    <i class="fas fa-file-word"></i> Word to PDF
-                </button>
-                <button class="tab-btn gradient-purple" id="pdfToWordBtn">
-                    <i class="fas fa-file-pdf"></i> PDF to Word
-                </button>
-            </div>
+    <div class="converter-box">
+      <div class="upload-area">
+        <i class="fas fa-upload"></i>
+        <h3>Select Your File</h3>
+        <input type="file" id="fileInput" accept=".doc,.docx,.pdf" class="form-control">
+      </div>
 
-            <div class="drop-zone gradient-border" id="dropZone">
-                <div class="upload-icon">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                </div>
-                <h3>Drag & drop your file here</h3>
-                <p class="file-types">Supports: DOCX, DOC, RTF, PDF</p>
-                <input type="file" id="fileInput" accept=".docx,.doc,.rtf,.pdf">
-                <button class="browse-btn gradient-blue">
-                    <i class="fas fa-folder-open"></i> Browse Files
-                </button>
-            </div>
+      <div class="form-group">
+        <label for="conversionType">Conversion Type</label>
+        <select id="conversionType" class="form-control">
+          <option value="doc-to-pdf">DOC to PDF</option>
+          <option value="pdf-to-doc">PDF to DOC</option>
+        </select>
+      </div>
 
-            <div class="options">
-                <div class="option-card">
-                    <label for="outputFormat"><i class="fas fa-file-export"></i> Output Format</label>
-                    <select id="outputFormat" class="styled-select">
-                        <option value="pdf">PDF Document</option>
-                        <option value="docx">Word Document</option>
-                    </select>
-                </div>
-                
-                <div class="option-card">
-                    <label for="quality"><i class="fas fa-sliders-h"></i> Quality: <span id="qualityValue">90</span>%</label>
-                    <div class="slider-container">
-                        <input type="range" id="quality" min="1" max="100" value="90">
-                        <div class="slider-labels">
-                            <span>Low</span>
-                            <span>High</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button id="convertBtn" class="convert-btn gradient-green" disabled>
-                <i class="fas fa-magic"></i> Convert Now
-            </button>
-
-            <div class="result-box gradient-border-success" id="resultBox">
-                <div class="success-header">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Conversion Complete!</h3>
-                </div>
-                <div class="file-info" id="fileInfo"></div>
-                <button id="downloadBtn" class="download-btn gradient-blue">
-                    <i class="fas fa-download"></i> Download File
-                </button>
-            </div>
-        </div>
-
-        <div class="features">
-            <div class="feature-card gradient-orange">
-                <i class="fas fa-lock"></i>
-                <h4>100% Secure</h4>
-                <p>Files never leave your browser</p>
-            </div>
-            <div class="feature-card gradient-purple">
-                <i class="fas fa-bolt"></i>
-                <h4>Lightning Fast</h4>
-                <p>Convert in seconds</p>
-            </div>
-            <div class="feature-card gradient-green">
-                <i class="fas fa-heart"></i>
-                <h4>Completely Free</h4>
-                <p>No hidden charges</p>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <div class="footer-links">
-                <a href="#"><i class="fas fa-shield-alt"></i> Privacy</a>
-                <a href="#"><i class="fas fa-file-contract"></i> Terms</a>
-                <a href="#"><i class="fas fa-question-circle"></i> Help</a>
-            </div>
-            <p class="copyright">© 2025 DocMagic Converter | Made with <i class="fas fa-heart"></i> for document lovers</p>
-        </footer>
+      <button class="btn" id="convertBtn">Convert & Download</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="script.js"></script>
+    <div class="preview-container" id="statusMessage"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/filesaver.js@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="https://unpkg.com/@cloudconvert/api@3.2.2/dist/browser.js"></script>
+  <script>
+    document.getElementById('convertBtn').addEventListener('click', async () => {
+      const fileInput = document.getElementById('fileInput');
+      const status = document.getElementById('statusMessage');
+      const type = document.getElementById('conversionType').value;
+
+      if (!fileInput.files.length) {
+        status.textContent = 'Please upload a file first.';
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const inputFormat = type === 'doc-to-pdf' ? 'docx' : 'pdf';
+      const outputFormat = type === 'doc-to-pdf' ? 'pdf' : 'docx';
+
+      status.textContent = 'Uploading and converting...';
+
+      const api = new window.CloudConvert('YOUR_CLOUDCONVERT_API_KEY');
+
+      try {
+        const job = await api.jobs.create({
+          tasks: {
+            import: {
+              operation: 'import/upload'
+            },
+            convert: {
+              operation: 'convert',
+              input: 'import',
+              input_format: inputFormat,
+              output_format: outputFormat
+            },
+            export: {
+              operation: 'export/url',
+              input: 'convert'
+            }
+          }
+        });
+
+        const uploadTask = job.tasks.find(task => task.name === 'import');
+        const uploadUrl = uploadTask.result.form.url;
+        const uploadParams = uploadTask.result.form.parameters;
+
+        const formData = new FormData();
+        Object.entries(uploadParams).forEach(([key, value]) => formData.append(key, value));
+        formData.append('file', file);
+
+        await fetch(uploadUrl, {
+          method: 'POST',
+          body: formData
+        });
+
+        const exportTask = await api.tasks.wait(job.tasks.find(t => t.operation === 'export/url').id);
+        const fileUrl = exportTask.result.files[0].url;
+        const blob = await fetch(fileUrl).then(r => r.blob());
+
+        saveAs(blob, file.name.replace(/\..+$/, `.${outputFormat}`));
+        status.textContent = 'Conversion successful. Download started.';
+      } catch (err) {
+        console.error(err);
+        status.textContent = 'Error during conversion. Please try again.';
+      }
+    });
+  </script>
 </body>
-                                                                                                  </html>
+</html>
