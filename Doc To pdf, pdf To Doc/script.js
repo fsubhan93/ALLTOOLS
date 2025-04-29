@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
-    const tabButtons = document.querySelectorAll('.tab-btn');
+    const wordToPdfBtn = document.getElementById('wordToPdfBtn');
+    const pdfToWordBtn = document.getElementById('pdfToWordBtn');
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const outputFormat = document.getElementById('outputFormat');
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultBox = document.getElementById('resultBox');
     const fileInfo = document.getElementById('fileInfo');
     const downloadBtn = document.getElementById('downloadBtn');
-    const supportedFormats = document.getElementById('supportedFormats');
+    const browseBtn = dropZone.querySelector('.browse-btn');
 
     // State variables
     let currentConversionType = 'word-to-pdf';
@@ -21,32 +22,43 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUI();
 
     // Event Listeners
-    tabButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            currentConversionType = btn.dataset.type;
-            tabButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateUI();
-        });
+    wordToPdfBtn.addEventListener('click', () => {
+        currentConversionType = 'word-to-pdf';
+        updateUI();
+        toggleActiveTab();
     });
 
-    dropZone.addEventListener('click', () => fileInput.click());
+    pdfToWordBtn.addEventListener('click', () => {
+        currentConversionType = 'pdf-to-word';
+        updateUI();
+        toggleActiveTab();
+    });
+
+    function toggleActiveTab() {
+        wordToPdfBtn.classList.toggle('active', currentConversionType === 'word-to-pdf');
+        pdfToWordBtn.classList.toggle('active', currentConversionType === 'pdf-to-word');
+    }
+
+    browseBtn.addEventListener('click', () => fileInput.click());
     
     ['dragover', 'dragenter'].forEach(event => {
         dropZone.addEventListener(event, (e) => {
             e.preventDefault();
-            dropZone.style.backgroundColor = 'rgba(72, 149, 239, 0.1)';
+            dropZone.style.borderColor = '#4361ee';
+            dropZone.style.backgroundColor = 'rgba(67, 97, 238, 0.05)';
         });
     });
 
     ['dragleave', 'dragend'].forEach(event => {
         dropZone.addEventListener(event, () => {
+            dropZone.style.borderColor = 'transparent';
             dropZone.style.backgroundColor = '';
         });
     });
 
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
+        dropZone.style.borderColor = 'transparent';
         dropZone.style.backgroundColor = '';
         if (e.dataTransfer.files.length) {
             handleFileSelection(e.dataTransfer.files[0]);
@@ -69,18 +81,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Functions
     function updateUI() {
         if (currentConversionType === 'word-to-pdf') {
-            supportedFormats.textContent = 'Supports: DOCX, DOC, RTF';
             fileInput.accept = '.docx,.doc,.rtf';
-            outputFormat.innerHTML = '<option value="pdf">PDF</option>';
-            document.querySelector('.option-group:nth-child(2)').style.display = 'block';
+            outputFormat.innerHTML = '<option value="pdf">PDF Document</option>';
+            document.querySelector('.file-types').textContent = 'Supports: DOCX, DOC, RTF';
         } else {
-            supportedFormats.textContent = 'Supports: PDF';
             fileInput.accept = '.pdf';
             outputFormat.innerHTML = `
-                <option value="docx">DOCX (Microsoft Word)</option>
-                <option value="rtf">RTF (Rich Text Format)</option>
+                <option value="docx">Word Document (DOCX)</option>
+                <option value="rtf">Rich Text Format (RTF)</option>
             `;
-            document.querySelector('.option-group:nth-child(2)').style.display = 'none';
+            document.querySelector('.file-types').textContent = 'Supports: PDF';
         }
         
         // Reset
@@ -92,14 +102,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleFileSelection(file) {
         // Validate file type
         const validTypes = {
-            'word-to-pdf': ['.docx', '.doc', '.rtf'],
-            'pdf-to-word': ['.pdf']
+            'word-to-pdf': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword', 'application/rtf'],
+            'pdf-to-word': ['application/pdf']
         }[currentConversionType];
         
         const fileExt = '.' + file.name.split('.').pop().toLowerCase();
         
-        if (!validTypes.includes(fileExt)) {
-            alert(`Please select a ${validTypes.join(', ')} file`);
+        if (!validTypes.includes(file.type) && !file.name.match(/\.(docx|doc|rtf|pdf)$/i)) {
+            alert(`Please select a ${currentConversionType === 'word-to-pdf' ? 'Word document' : 'PDF file'}`);
             return;
         }
         
@@ -141,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Conversion failed: ' + error.message);
             console.error(error);
         } finally {
-            convertBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Convert Now';
+            convertBtn.innerHTML = '<i class="fas fa-magic"></i> Convert Now';
         }
     }
 
