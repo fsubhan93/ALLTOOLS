@@ -3,70 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Word ⇄ PDF Converter</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Colorful Word ⇄ PDF Converter</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-file-alt"></i> Free Word ⇄ PDF Converter</h1>
-            <p class="subtitle">Convert documents without uploading to any server</p>
-        </header>
+        <div class="converter-card">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-file-pdf"></i>
+                    <h1>DocMagic Converter</h1>
+                </div>
+                <p class="tagline">Transform documents with vibrant ease</p>
+            </div>
 
-        <div class="converter-box">
-            <div class="conversion-tabs">
-                <button class="tab-btn active" data-type="word-to-pdf">
+            <div class="converter-tabs">
+                <button class="tab-btn active gradient-blue" id="wordToPdfBtn">
                     <i class="fas fa-file-word"></i> Word to PDF
                 </button>
-                <button class="tab-btn" data-type="pdf-to-word">
+                <button class="tab-btn gradient-purple" id="pdfToWordBtn">
                     <i class="fas fa-file-pdf"></i> PDF to Word
                 </button>
             </div>
 
-            <div class="drop-zone" id="dropZone">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p>Drag & drop your file here or click to browse</p>
-                <p class="file-types" id="supportedFormats">Supports: DOCX, DOC, RTF</p>
-                <input type="file" id="fileInput" accept=".docx,.doc,.rtf">
+            <div class="drop-zone gradient-border" id="dropZone">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Drag & drop your file here</h3>
+                <p class="file-types">Supports: DOCX, DOC, RTF, PDF</p>
+                <input type="file" id="fileInput" accept=".docx,.doc,.rtf,.pdf">
+                <button class="browse-btn gradient-blue">
+                    <i class="fas fa-folder-open"></i> Browse Files
+                </button>
             </div>
 
-            <div class="options" id="options">
-                <div class="option-group">
-                    <label for="outputFormat">Output Format:</label>
-                    <select id="outputFormat">
-                        <option value="pdf">PDF</option>
+            <div class="options">
+                <div class="option-card">
+                    <label for="outputFormat"><i class="fas fa-file-export"></i> Output Format</label>
+                    <select id="outputFormat" class="styled-select">
+                        <option value="pdf">PDF Document</option>
+                        <option value="docx">Word Document</option>
                     </select>
                 </div>
-                <div class="option-group">
-                    <label for="quality">Quality: <span id="qualityValue">90</span>%</label>
-                    <input type="range" id="quality" min="1" max="100" value="90">
+                
+                <div class="option-card">
+                    <label for="quality"><i class="fas fa-sliders-h"></i> Quality: <span id="qualityValue">90</span>%</label>
+                    <div class="slider-container">
+                        <input type="range" id="quality" min="1" max="100" value="90">
+                        <div class="slider-labels">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <button id="convertBtn" disabled>
-                <i class="fas fa-exchange-alt"></i> Convert Now
+            <button id="convertBtn" class="convert-btn gradient-green" disabled>
+                <i class="fas fa-magic"></i> Convert Now
             </button>
 
-            <div class="result-box" id="resultBox" style="display: none;">
-                <h3><i class="fas fa-check-circle"></i> Conversion Complete!</h3>
+            <div class="result-box gradient-border-success" id="resultBox">
+                <div class="success-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Conversion Complete!</h3>
+                </div>
                 <div class="file-info" id="fileInfo"></div>
-                <button id="downloadBtn">
+                <button id="downloadBtn" class="download-btn gradient-blue">
                     <i class="fas fa-download"></i> Download File
                 </button>
             </div>
         </div>
 
-        <footer>
-            <p>100% Free • No file uploads • Works entirely in your browser</p>
+        <div class="features">
+            <div class="feature-card gradient-orange">
+                <i class="fas fa-lock"></i>
+                <h4>100% Secure</h4>
+                <p>Files never leave your browser</p>
+            </div>
+            <div class="feature-card gradient-purple">
+                <i class="fas fa-bolt"></i>
+                <h4>Lightning Fast</h4>
+                <p>Convert in seconds</p>
+            </div>
+            <div class="feature-card gradient-green">
+                <i class="fas fa-heart"></i>
+                <h4>Completely Free</h4>
+                <p>No hidden charges</p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-shield-alt"></i> Privacy</a>
+                <a href="#"><i class="fas fa-file-contract"></i> Terms</a>
+                <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+            </div>
+            <p class="copyright">© 2025 DocMagic Converter | Made with <i class="fas fa-heart"></i> for document lovers</p>
         </footer>
     </div>
 
-    <!-- Free JavaScript Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="script.js"></script>
 </body>
-</html>
+                                                                                                  </html>
