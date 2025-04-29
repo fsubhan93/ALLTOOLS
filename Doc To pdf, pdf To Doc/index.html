@@ -2,69 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Word ⇄ PDF Converter | ALLTOOLS</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-    <script src="script.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Word ⇄ PDF Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Word ⇄ PDF Converter</h1>
-            <p>Convert between Word documents and PDF files instantly</p>
+            <h1><i class="fas fa-file-alt"></i> Free Word ⇄ PDF Converter</h1>
+            <p class="subtitle">Convert documents without uploading to any server</p>
         </header>
 
         <div class="converter-box">
-            <div class="tabs">
-                <button class="tab active" data-tab="word-to-pdf">Word to PDF</button>
-                <button class="tab" data-tab="pdf-to-word">PDF to Word</button>
+            <div class="conversion-tabs">
+                <button class="tab-btn active" data-type="word-to-pdf">
+                    <i class="fas fa-file-word"></i> Word to PDF
+                </button>
+                <button class="tab-btn" data-type="pdf-to-word">
+                    <i class="fas fa-file-pdf"></i> PDF to Word
+                </button>
             </div>
 
-            <div id="word-to-pdf" class="tab-content active">
-                <div class="upload-area" id="word-upload">
-                    <i class="upload-icon">📄</i>
-                    <h3>Upload Word File</h3>
-                    <p>DOC, DOCX (Max 10MB)</p>
-                    <input type="file" id="word-input" accept=".doc,.docx">
+            <div class="drop-zone" id="dropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag & drop your file here or click to browse</p>
+                <p class="file-types" id="supportedFormats">Supports: DOCX, DOC, RTF</p>
+                <input type="file" id="fileInput" accept=".docx,.doc,.rtf">
+            </div>
+
+            <div class="options" id="options">
+                <div class="option-group">
+                    <label for="outputFormat">Output Format:</label>
+                    <select id="outputFormat">
+                        <option value="pdf">PDF</option>
+                    </select>
                 </div>
-                <button id="convert-to-pdf" class="convert-btn">Convert to PDF</button>
-                <div class="status" id="word-status"></div>
-                <div class="progress-container" id="word-progress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress" id="word-progress-bar"></div>
-                    </div>
+                <div class="option-group">
+                    <label for="quality">Quality: <span id="qualityValue">90</span>%</label>
+                    <input type="range" id="quality" min="1" max="100" value="90">
                 </div>
             </div>
 
-            <div id="pdf-to-word" class="tab-content">
-                <div class="upload-area" id="pdf-upload">
-                    <i class="upload-icon">📑</i>
-                    <h3>Upload PDF File</h3>
-                    <p>PDF (Max 10MB)</p>
-                    <input type="file" id="pdf-input" accept=".pdf">
-                </div>
-                <button id="convert-to-word" class="convert-btn">Convert to Word</button>
-                <div class="status" id="pdf-status"></div>
-                <div class="progress-container" id="pdf-progress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress" id="pdf-progress-bar"></div>
-                    </div>
-                </div>
+            <button id="convertBtn" disabled>
+                <i class="fas fa-exchange-alt"></i> Convert Now
+            </button>
+
+            <div class="result-box" id="resultBox" style="display: none;">
+                <h3><i class="fas fa-check-circle"></i> Conversion Complete!</h3>
+                <div class="file-info" id="fileInfo"></div>
+                <button id="downloadBtn">
+                    <i class="fas fa-download"></i> Download File
+                </button>
             </div>
         </div>
 
-        <div class="instructions">
-            <h3>How to convert:</h3>
-            <ol>
-                <li>Select the conversion direction (Word→PDF or PDF→Word)</li>
-                <li>Upload your file</li>
-                <li>Click convert button</li>
-                <li>Download your converted file</li>
-            </ol>
-        </div>
+        <footer>
+            <p>100% Free • No file uploads • Works entirely in your browser</p>
+        </footer>
     </div>
+
+    <!-- Free JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
