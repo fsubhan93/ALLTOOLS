@@ -1,1 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Toolbox</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+  <h1>PDF Toolbox</h1>
 
+  <div class="tool-container">
+    <h2>Merge PDFs</h2>
+    <input type="file" id="mergeFiles" multiple accept="application/pdf">
+    <button onclick="mergePDFs()">Merge</button>
+  </div>
+
+  <div class="tool-container">
+    <h2>Split PDF</h2>
+    <input type="file" id="splitFile" accept="application/pdf">
+    <input type="number" id="splitPage" placeholder="Page number to extract">
+    <button onclick="splitPDF()">Split</button>
+  </div>
+
+  <div class="tool-container">
+    <h2>Edit PDF Metadata</h2>
+    <input type="file" id="editFile" accept="application/pdf">
+    <input type="text" id="pdfTitle" placeholder="New Title">
+    <input type="text" id="pdfAuthor" placeholder="New Author">
+    <button onclick="editPDF()">Edit Metadata</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
