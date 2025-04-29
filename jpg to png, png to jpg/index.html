@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Image Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Online Image Converter</h1>
+        <div class="converter-box">
+            <div class="controls">
+                <div class="format-selector">
+                    <label for="conversion-type">Convert from:</label>
+                    <select id="conversion-type">
+                        <option value="jpg-to-png">JPG to PNG</option>
+                        <option value="png-to-jpg">PNG to JPG</option>
+                    </select>
+                </div>
+                <div class="quality-control" id="quality-control" style="display: none;">
+                    <label for="jpg-quality">JPG Quality (1-100):</label>
+                    <input type="range" id="jpg-quality" min="1" max="100" value="90">
+                    <span id="quality-value">90</span>
+                </div>
+            </div>
+            
+            <div class="drop-area" id="drop-area">
+                <p>Drag & Drop your image here or click to browse</p>
+                <input type="file" id="file-input" accept="image/jpeg, image/png">
+            </div>
+            
+            <div class="preview-area">
+                <div class="preview-container">
+                    <h3>Original Image</h3>
+                    <img id="original-preview" src="#" alt="Original image preview">
+                    <p id="original-info"></p>
+                </div>
+                <div class="preview-container">
+                    <h3>Converted Image</h3>
+                    <img id="converted-preview" src="#" alt="Converted image preview">
+                    <p id="converted-info"></p>
+                </div>
+            </div>
+            
+            <button id="download-btn" disabled>Download Converted Image</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
