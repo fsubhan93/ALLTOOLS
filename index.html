@@ -139,6 +139,23 @@
             color: #666;
         }
         
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 768px) {
             .tools-grid {
                 grid-template-columns: 1fr;
@@ -146,6 +163,11 @@
             
             .logo {
                 font-size: 2rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
             }
         }
     </style>
@@ -249,46 +271,104 @@
             </div>
         </section>
         
-        <!-- Text & Writing Tools Section -->
+        <!-- Converters Section -->
         <section class="tool-category">
             <div class="category-title">
-                <div class="category-icon"><i class="fas fa-pen-fancy"></i></div>
-                <h2>Text & Writing Tools</h2>
+                <div class="category-icon"><i class="fas fa-exchange-alt"></i></div>
+                <h2>Converters</h2>
             </div>
             <div class="tools-grid">
-                <a href="#" class="tool-card">
-                    <h3>Grammar ⇄ Plagiarism Checker</h3>
-                    <p>Improve your writing quality</p>
+                <a href="currency-converter/index.html" class="tool-card">
+                    <h3>Currency Converter</h3>
+                    <p>Convert between world currencies</p>
                 </a>
-                <a href="#" class="tool-card">
-                    <h3>Summarizer ⇄ Paraphraser</h3>
-                    <p>Condense or reword text content</p>
+                <a href="unit-converter/index.html" class="tool-card">
+                    <h3>Unit Converter</h3>
+                    <p>Convert between measurement units</p>
                 </a>
-            </div>
-        </section>
-        
-        <!-- Other Useful Converters Section -->
-        <section class="tool-category">
-            <div class="category-title">
-                <div class="category-icon"><i class="fas fa-tools"></i></div>
-                <h2>Other Useful Converters</h2>
-            </div>
-            <div class="tools-grid">
                 <a href="#" class="tool-card">
                     <h3>ZIP ⇄ Folder</h3>
                     <p>Compress or extract archive files</p>
-                </a>
-                <a href="#" class="tool-card">
-                    <h3>Currency ⇄ Unit Converter</h3>
-                    <p>Convert between currencies and units</p>
                 </a>
             </div>
         </section>
         
         <footer>
+            <div class="footer-links">
+                <a href="terms-of-use.html">Terms of Use</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="mailto:support@alltools.com">Contact Support</a>
+            </div>
             <p>© 2025 ALLTOOLS | A complete online toolbox for all your needs</p>
-            <p>Contact: support@alltools.com | Terms of Service | Privacy Policy</p>
         </footer>
     </div>
+
+    <!-- Modal for Terms and Privacy -->
+    <div id="termsModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Terms of Use</h2>
+            <div id="termsContent"></div>
+        </div>
+    </div>
+
+    <div id="privacyModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Privacy Policy</h2>
+            <div id="privacyContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Simple search functionality
+        document.querySelector('.search-bar input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.tool-card').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+                card.style.display = (title.includes(searchTerm) || desc.includes(searchTerm)) 
+                    ? 'block' 
+                    : 'none';
+            });
+        });
+
+        // Modal functionality for terms and privacy
+        document.querySelectorAll('.footer-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href').includes('terms')) {
+                    fetch('terms-of-use.html')
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById('termsContent').innerHTML = data;
+                            document.getElementById('termsModal').style.display = 'block';
+                        });
+                    e.preventDefault();
+                } else if (this.getAttribute('href').includes('privacy')) {
+                    fetch('privacy-policy.html')
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById('privacyContent').innerHTML = data;
+                            document.getElementById('privacyModal').style.display = 'block';
+                        });
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Close modals
+        document.querySelectorAll('.close').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
