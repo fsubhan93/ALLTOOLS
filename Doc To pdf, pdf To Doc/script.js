@@ -1,240 +1,248 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize PDF.js worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+    // DOM Elements
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const outputFormat = document.getElementById('outputFormat');
+    const qualitySlider = document.getElementById('quality');
+    const qualityValue = document.getElementById('qualityValue');
+    const convertBtn = document.getElementById('convertBtn');
+    const resultBox = document.getElementById('resultBox');
+    const fileInfo = document.getElementById('fileInfo');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const supportedFormats = document.getElementById('supportedFormats');
 
-    // Tab switching
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            tab.classList.add('active');
-            const tabId = tab.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
+    // State variables
+    let currentConversionType = 'word-to-pdf';
+    let selectedFile = null;
+    let convertedFile = null;
+
+    // Initialize
+    updateUI();
+
+    // Event Listeners
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentConversionType = btn.dataset.type;
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateUI();
         });
     });
 
-    // Word to PDF conversion
-    const wordToPdfBtn = document.getElementById('convert-to-pdf');
-    const wordInput = document.getElementById('word-input');
-    const wordStatus = document.getElementById('word-status');
-    const wordUploadArea = document.getElementById('word-upload');
-    const wordProgress = document.getElementById('word-progress');
-    const wordProgressBar = document.getElementById('word-progress-bar');
-
-    wordUploadArea.addEventListener('click', () => wordInput.click());
+    dropZone.addEventListener('click', () => fileInput.click());
     
-    wordInput.addEventListener('change', function() {
-        if (this.files.length) {
-            const file = this.files[0];
-            wordUploadArea.innerHTML = `
-                <i class="upload-icon">✅</i>
-                <h3>${file.name}</h3>
-                <p>${formatFileSize(file.size)}</p>
+    ['dragover', 'dragenter'].forEach(event => {
+        dropZone.addEventListener(event, (e) => {
+            e.preventDefault();
+            dropZone.style.backgroundColor = 'rgba(72, 149, 239, 0.1)';
+        });
+    });
+
+    ['dragleave', 'dragend'].forEach(event => {
+        dropZone.addEventListener(event, () => {
+            dropZone.style.backgroundColor = '';
+        });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.backgroundColor = '';
+        if (e.dataTransfer.files.length) {
+            handleFileSelection(e.dataTransfer.files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFileSelection(fileInput.files[0]);
+        }
+    });
+
+    qualitySlider.addEventListener('input', () => {
+        qualityValue.textContent = qualitySlider.value;
+    });
+
+    convertBtn.addEventListener('click', convertFile);
+    downloadBtn.addEventListener('click', downloadFile);
+
+    // Functions
+    function updateUI() {
+        if (currentConversionType === 'word-to-pdf') {
+            supportedFormats.textContent = 'Supports: DOCX, DOC, RTF';
+            fileInput.accept = '.docx,.doc,.rtf';
+            outputFormat.innerHTML = '<option value="pdf">PDF</option>';
+            document.querySelector('.option-group:nth-child(2)').style.display = 'block';
+        } else {
+            supportedFormats.textContent = 'Supports: PDF';
+            fileInput.accept = '.pdf';
+            outputFormat.innerHTML = `
+                <option value="docx">DOCX (Microsoft Word)</option>
+                <option value="rtf">RTF (Rich Text Format)</option>
             `;
+            document.querySelector('.option-group:nth-child(2)').style.display = 'none';
         }
-    });
+        
+        // Reset
+        selectedFile = null;
+        convertBtn.disabled = true;
+        resultBox.style.display = 'none';
+    }
 
-    wordToPdfBtn.addEventListener('click', async function() {
-        if (!wordInput.files.length) {
-            showStatus(wordStatus, 'Please select a Word file first', 'error');
+    function handleFileSelection(file) {
+        // Validate file type
+        const validTypes = {
+            'word-to-pdf': ['.docx', '.doc', '.rtf'],
+            'pdf-to-word': ['.pdf']
+        }[currentConversionType];
+        
+        const fileExt = '.' + file.name.split('.').pop().toLowerCase();
+        
+        if (!validTypes.includes(fileExt)) {
+            alert(`Please select a ${validTypes.join(', ')} file`);
             return;
         }
         
-        const wordFile = wordInput.files[0];
-        if (wordFile.size > 10 * 1024 * 1024) {
-            showStatus(wordStatus, 'File is too large (max 10MB)', 'error');
-            return;
-        }
+        selectedFile = file;
+        convertBtn.disabled = false;
         
-        showStatus(wordStatus, 'Converting Word to PDF...', 'processing');
-        wordProgress.style.display = 'block';
-        updateProgress(wordProgressBar, 0);
+        // Show file info
+        fileInfo.innerHTML = `
+            <p><strong>Selected File:</strong> ${file.name}</p>
+            <p><strong>Size:</strong> ${formatFileSize(file.size)}</p>
+            <p><strong>Type:</strong> ${fileExt.toUpperCase().replace('.', '')}</p>
+        `;
+    }
 
+    async function convertFile() {
+        if (!selectedFile) return;
+        
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
+        
         try {
-            // Show progress (simulated)
-            updateProgress(wordProgressBar, 30);
+            const outputType = outputFormat.value;
+            const fileName = selectedFile.name.replace(/\.[^/.]+$/, '') + '.' + outputType;
             
-            // Read the Word file
-            const arrayBuffer = await readFileAsArrayBuffer(wordFile);
-            updateProgress(wordProgressBar, 60);
-
-            // Convert Word to HTML with formatting
-            const result = await mammoth.extractRawHtml({ arrayBuffer });
-            const html = result.value;
-            updateProgress(wordProgressBar, 80);
-
-            // Create PDF with better formatting
-            const pdfDoc = await PDFLib.PDFDocument.create();
-            const page = pdfDoc.addPage([595, 842]); // A4 size
-            
-            // Improved text formatting
-            const textLines = html.split('\n');
-            let yPosition = 800;
-            const fontSize = 12;
-            const lineHeight = 18;
-            
-            for (const line of textLines) {
-                if (line.trim()) {
-                    page.drawText(line, {
-                        x: 50,
-                        y: yPosition,
-                        size: fontSize,
-                        maxWidth: 500,
-                    });
-                    yPosition -= lineHeight;
-                }
+            if (currentConversionType === 'word-to-pdf') {
+                convertedFile = await convertWordToPdf(selectedFile, fileName);
+            } else {
+                convertedFile = await convertPdfToWord(selectedFile, fileName);
             }
-
-            updateProgress(wordProgressBar, 90);
-            const pdfBytes = await pdfDoc.save();
             
-            // Download PDF
-            downloadFile(pdfBytes, wordFile.name.replace(/\.[^/.]+$/, '') + '.pdf', 'application/pdf');
-            
-            showStatus(wordStatus, 'Conversion complete!', 'success');
-        } catch (error) {
-            console.error('Conversion error:', error);
-            showStatus(wordStatus, 'Conversion failed. Please try again.', 'error');
-        } finally {
-            wordProgress.style.display = 'none';
-        }
-    });
-
-    // PDF to Word conversion
-    const pdfToWordBtn = document.getElementById('convert-to-word');
-    const pdfInput = document.getElementById('pdf-input');
-    const pdfStatus = document.getElementById('pdf-status');
-    const pdfUploadArea = document.getElementById('pdf-upload');
-    const pdfProgress = document.getElementById('pdf-progress');
-    const pdfProgressBar = document.getElementById('pdf-progress-bar');
-
-    pdfUploadArea.addEventListener('click', () => pdfInput.click());
-    
-    pdfInput.addEventListener('change', function() {
-        if (this.files.length) {
-            const file = this.files[0];
-            pdfUploadArea.innerHTML = `
-                <i class="upload-icon">✅</i>
-                <h3>${file.name}</h3>
-                <p>${formatFileSize(file.size)}</p>
+            // Show result
+            fileInfo.innerHTML += `
+                <p><strong>Converted to:</strong> ${fileName}</p>
+                <p><strong>New Size:</strong> ${formatFileSize(convertedFile.size)}</p>
             `;
-        }
-    });
-
-    pdfToWordBtn.addEventListener('click', async function() {
-        if (!pdfInput.files.length) {
-            showStatus(pdfStatus, 'Please select a PDF file first', 'error');
-            return;
-        }
-        
-        const pdfFile = pdfInput.files[0];
-        if (pdfFile.size > 10 * 1024 * 1024) {
-            showStatus(pdfStatus, 'File is too large (max 10MB)', 'error');
-            return;
-        }
-        
-        showStatus(pdfStatus, 'Converting PDF to Word...', 'processing');
-        pdfProgress.style.display = 'block';
-        updateProgress(pdfProgressBar, 0);
-
-        try {
-            updateProgress(pdfProgressBar, 20);
-            const arrayBuffer = await readFileAsArrayBuffer(pdfFile);
+            resultBox.style.display = 'block';
             
-            // Use PDF.js for better text extraction
-            updateProgress(pdfProgressBar, 40);
-            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-            const pdf = await loadingTask.promise;
-            
-            let textContent = '';
-            updateProgress(pdfProgressBar, 60);
-            
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                textContent += content.items.map(item => item.str).join(' ') + '\n\n';
-                updateProgress(pdfProgressBar, 60 + (i / pdf.numPages * 30));
-            }
-
-            // Create DOCX-like content (simplified)
-            updateProgress(pdfProgressBar, 95);
-            const docContent = `<?xml version="1.0"?>
-                <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-                    <w:body>
-                        <w:p><w:r><w:t>${escapeXml(textContent)}</w:t></w:r></w:p>
-                    </w:body>
-                </w:document>`;
-            
-            downloadFile(docContent, pdfFile.name.replace(/\.[^/.]+$/, '') + '.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-            
-            showStatus(pdfStatus, 'Conversion complete!', 'success');
         } catch (error) {
-            console.error('Conversion error:', error);
-            showStatus(pdfStatus, 'Conversion failed. Please try again.', 'error');
+            alert('Conversion failed: ' + error.message);
+            console.error(error);
         } finally {
-            pdfProgress.style.display = 'none';
-        }
-    });
-
-    // Helper functions
-    function showStatus(element, message, type) {
-        element.textContent = message;
-        element.style.display = 'block';
-        element.className = 'status ' + type;
-        
-        if (type === 'success' || type === 'error') {
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 5000);
+            convertBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Convert Now';
         }
     }
 
-    function updateProgress(progressBar, percent) {
-        progressBar.style.width = `${percent}%`;
+    async function convertWordToPdf(file, fileName) {
+        // Read the Word file
+        const arrayBuffer = await file.arrayBuffer();
+        
+        // Convert DOCX to HTML using Mammoth.js
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        const textContent = result.value;
+        
+        // Create a PDF with the text content
+        const { PDFDocument, rgb } = PDFLib;
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([550, 750]);
+        
+        // Add text to PDF
+        const fontSize = 12;
+        const textWidth = 500;
+        const { height } = page.getSize();
+        
+        page.drawText(textContent, {
+            x: 50,
+            y: height - 50 - fontSize,
+            size: fontSize,
+            maxWidth: textWidth,
+            lineHeight: fontSize * 1.2,
+            color: rgb(0, 0, 0),
+        });
+        
+        // Save PDF
+        const pdfBytes = await pdfDoc.save();
+        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+        
+        return {
+            name: fileName,
+            type: 'application/pdf',
+            size: pdfBlob.size,
+            blob: pdfBlob
+        };
     }
 
+    async function convertPdfToWord(file, fileName) {
+        // Read the PDF file
+        const arrayBuffer = await file.arrayBuffer();
+        const { PDFDocument } = PDFLib;
+        const pdfDoc = await PDFDocument.load(arrayBuffer);
+        
+        // Extract text from PDF
+        let textContent = '';
+        for (let i = 0; i < pdfDoc.getPageCount(); i++) {
+            const page = pdfDoc.getPage(i);
+            const text = await page.getTextContent();
+            textContent += text.items.map(item => item.str).join(' ') + '\n\n';
+        }
+        
+        // Create a Word document using docx.js
+        const { Document, Paragraph, TextRun, Packer } = docx;
+        const doc = new Document({
+            sections: [{
+                properties: {},
+                children: [
+                    new Paragraph({
+                        children: [
+                            new TextRun({
+                                text: textContent,
+                                size: 24,
+                            }),
+                        ],
+                    }),
+                ],
+            }],
+        });
+        
+        // Generate the DOCX file
+        const docxBuffer = await Packer.toBuffer(doc);
+        const docxBlob = new Blob([docxBuffer], { 
+            type: outputFormat.value === 'docx' 
+                ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+                : 'application/rtf' 
+        });
+        
+        return {
+            name: fileName,
+            type: docxBlob.type,
+            size: docxBlob.size,
+            blob: docxBlob
+        };
+    }
+
+    function downloadFile() {
+        if (!convertedFile) return;
+        saveAs(convertedFile.blob, convertedFile.name);
+    }
+
+    // Helper function
     function formatFileSize(bytes) {
-        if (bytes < 1024) return bytes + ' bytes';
-        else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-        else return (bytes / 1048576).toFixed(1) + ' MB';
-    }
-
-    function readFileAsArrayBuffer(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsArrayBuffer(file);
-        });
-    }
-
-    function downloadFile(data, filename, mimeType) {
-        const blob = new Blob([data], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => {
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }, 100);
-    }
-
-    function escapeXml(unsafe) {
-        return unsafe.replace(/[<>&'"]/g, function(c) {
-            switch (c) {
-                case '<': return '&lt;';
-                case '>': return '&gt;';
-                case '&': return '&amp;';
-                case '\'': return '&apos;';
-                case '"': return '&quot;';
-            }
-        });
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 });
