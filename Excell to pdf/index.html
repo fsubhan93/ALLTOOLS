@@ -1,197 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Excel to PDF Converter</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <style>
-    :root {
-      --primary-color: #4a6bff;
-      --secondary-color: #f8f9fa;
-      --text-color: #333;
-      --light-text: #777;
-      --border-color: #ddd;
-      --error-color: #ff4d4f;
-      --success-color: #52c41a;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f5f5f5;
-      color: var(--text-color);
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: var(--primary-color);
-    }
-
-    .subtitle {
-      text-align: center;
-      color: var(--light-text);
-      margin-bottom: 30px;
-    }
-
-    .converter-box {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      padding: 30px;
-    }
-
-    .upload-area {
-      border: 2px dashed var(--border-color);
-      border-radius: 8px;
-      padding: 30px;
-      text-align: center;
-      margin-bottom: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .upload-area:hover {
-      border-color: var(--primary-color);
-      background-color: rgba(74, 107, 255, 0.05);
-    }
-
-    .upload-area i {
-      font-size: 48px;
-      color: var(--primary-color);
-      margin-bottom: 10px;
-    }
-
-    .btn {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-      background-color: #3a5bef;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
-      font-size: 16px;
-    }
-
-    .preview-container {
-      margin-top: 20px;
-      font-size: 16px;
-      color: var(--primary-color);
-      text-align: center;
-      min-height: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel to PDF Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1><i class="fas fa-file-excel"></i> Excel to PDF Converter</h1>
-    <p class="subtitle">Convert your Excel spreadsheets to high-quality PDFs</p>
-
-    <div class="converter-box">
-      <div class="upload-area">
-        <i class="fas fa-upload"></i>
-        <h3>Select Your Excel File</h3>
-        <input type="file" id="fileInput" accept=".xls,.xlsx" class="form-control" />
-      </div>
-
-      <button class="btn" id="convertBtn">Convert & Download PDF</button>
+    <div class="container">
+        <h1><i class="fas fa-file-pdf"></i> Excel to PDF Converter</h1>
+        <p class="subtitle">Convert your Excel files to PDF with custom settings</p>
+        
+        <div class="converter-box">
+            <div class="upload-area" id="dropArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop Excel File Here</h3>
+                <p>or</p>
+                <button id="selectFile" class="btn">Select Excel File</button>
+                <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+            </div>
+            
+            <div class="settings-panel">
+                <h3><i class="fas fa-cog"></i> PDF Settings</h3>
+                
+                <div class="form-group">
+                    <label for="pageSize">Page Size:</label>
+                    <select id="pageSize" class="form-control">
+                        <option value="a4">A4 (210 × 297 mm)</option>
+                        <option value="letter">Letter (8.5 × 11 in)</option>
+                        <option value="legal">Legal (8.5 × 14 in)</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                
+                <div id="customSizeGroup" class="form-group" style="display: none;">
+                    <label for="customWidth">Custom Size (mm):</label>
+                    <div class="size-inputs">
+                        <input type="number" id="customWidth" class="form-control" placeholder="Width" min="1" value="210">
+                        <span>×</span>
+                        <input type="number" id="customHeight" class="form-control" placeholder="Height" min="1" value="297">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pageOrientation">Orientation:</label>
+                    <select id="pageOrientation" class="form-control">
+                        <option value="portrait">Portrait</option>
+                        <option value="landscape">Landscape</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="marginSize">Margin Size (mm):</label>
+                    <input type="range" id="marginSize" min="0" max="50" value="10" class="slider">
+                    <span id="marginValue">10 mm</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fontSize">Font Size (pt):</label>
+                    <input type="range" id="fontSize" min="6" max="24" value="10" class="slider">
+                    <span id="fontSizeValue">10 pt</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="headerColor">Header Color:</label>
+                    <input type="color" id="headerColor" value="#4a6bff">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cellPadding">Cell Padding (px):</label>
+                    <input type="range" id="cellPadding" min="1" max="10" value="5" class="slider">
+                    <span id="cellPaddingValue">5 px</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="showGrid">Show Grid Lines:</label>
+                    <select id="showGrid" class="form-control">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pdfName">PDF Name:</label>
+                    <input type="text" id="pdfName" class="form-control" placeholder="output.pdf">
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h3><i class="fas fa-eye"></i> Preview</h3>
+                <div class="preview-container" id="previewContainer">
+                    <p>No Excel file selected yet</p>
+                </div>
+                <div class="preview-controls">
+                    <button id="clearFile" class="btn btn-outline"><i class="fas fa-trash"></i> Clear File</button>
+                    <button id="generatePdf" class="btn" disabled><i class="fas fa-file-pdf"></i> Generate PDF</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="file-info" id="fileInfo">
+            <!-- File info will be added here dynamically -->
+        </div>
     </div>
 
-    <div class="preview-container" id="statusMessage"></div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/filesaver.js@2.0.5/dist/FileSaver.min.js"></script>
-  <script src="https://unpkg.com/@cloudconvert/api@3.2.2/dist/browser.js"></script>
-  <script>
-    document.getElementById('convertBtn').addEventListener('click', async () => {
-      const fileInput = document.getElementById('fileInput');
-      const status = document.getElementById('statusMessage');
-
-      if (!fileInput.files.length) {
-        status.textContent = 'Please upload an Excel file first.';
-        return;
-      }
-
-      const file = fileInput.files[0];
-      status.textContent = 'Uploading and converting...';
-
-      const api = new window.CloudConvert('YOUR_CLOUDCONVERT_API_KEY');
-
-      try {
-        const job = await api.jobs.create({
-          tasks: {
-            import: {
-              operation: 'import/upload'
-            },
-            convert: {
-              operation: 'convert',
-              input: 'import',
-              input_format: 'xlsx',
-              output_format: 'pdf'
-            },
-            export: {
-              operation: 'export/url',
-              input: 'convert'
-            }
-          }
-        });
-
-        const uploadTask = job.tasks.find(task => task.name === 'import');
-        const uploadUrl = uploadTask.result.form.url;
-        const uploadParams = uploadTask.result.form.parameters;
-
-        const formData = new FormData();
-        Object.entries(uploadParams).forEach(([key, value]) => formData.append(key, value));
-        formData.append('file', file);
-
-        await fetch(uploadUrl, {
-          method: 'POST',
-          body: formData
-        });
-
-        const exportTask = await api.tasks.wait(job.tasks.find(t => t.operation === 'export/url').id);
-        const fileUrl = exportTask.result.files[0].url;
-        const blob = await fetch(fileUrl).then(r => r.blob());
-
-        saveAs(blob, file.name.replace(/\.(xls|xlsx)$/, '.pdf'));
-        status.textContent = 'Conversion successful. PDF is downloading.';
-      } catch (err) {
-        console.error(err);
-        status.textContent = 'Error during conversion. Please try again.';
-      }
-    });
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
-
