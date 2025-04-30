@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Converter | DOC to PDF & PDF to DOC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-file-alt"></i> Document Converter</h1>
+        <p class="subtitle">Convert between DOC/DOCX and PDF formats</p>
+        
+        <div class="converter-box">
+            <div class="converter-tabs">
+                <button id="docToPdfTab" class="tab-btn active">DOC to PDF</button>
+                <button id="pdfToDocTab" class="tab-btn">PDF to DOC</button>
+            </div>
+            
+            <!-- DOC to PDF Section -->
+            <div id="docToPdfSection" class="converter-section">
+                <div class="upload-area" id="docDropArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop DOC/DOCX File Here</h3>
+                    <p>or</p>
+                    <button id="selectDocFile" class="btn">Select Document</button>
+                    <input type="file" id="docFileInput" accept=".doc,.docx" style="display: none;">
+                </div>
+                
+                <div class="settings-panel">
+                    <h3><i class="fas fa-cog"></i> PDF Settings</h3>
+                    
+                    <div class="form-group">
+                        <label for="pdfPageSize">Page Size:</label>
+                        <select id="pdfPageSize" class="form-control">
+                            <option value="a4">A4 (210 × 297 mm)</option>
+                            <option value="letter">Letter (8.5 × 11 in)</option>
+                            <option value="legal">Legal (8.5 × 14 in)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pdfOrientation">Orientation:</label>
+                        <select id="pdfOrientation" class="form-control">
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pdfMargin">Margin Size (mm):</label>
+                        <input type="range" id="pdfMargin" min="0" max="50" value="10" class="slider">
+                        <span id="pdfMarginValue">10 mm</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pdfFontSize">Font Size (pt):</label>
+                        <input type="range" id="pdfFontSize" min="8" max="24" value="12" class="slider">
+                        <span id="pdfFontSizeValue">12 pt</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pdfFileName">PDF Name:</label>
+                        <input type="text" id="pdfFileName" class="form-control" placeholder="output.pdf">
+                    </div>
+                </div>
+                
+                <div class="preview-section">
+                    <h3><i class="fas fa-eye"></i> Preview</h3>
+                    <div class="preview-container" id="docPreviewContainer">
+                        <p>No document selected yet</p>
+                    </div>
+                    <div class="preview-controls">
+                        <button id="clearDocFile" class="btn btn-outline"><i class="fas fa-trash"></i> Clear File</button>
+                        <button id="generatePdf" class="btn" disabled><i class="fas fa-file-pdf"></i> Convert to PDF</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PDF to DOC Section -->
+            <div id="pdfToDocSection" class="converter-section" style="display: none;">
+                <div class="upload-area" id="pdfDropArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop PDF File Here</h3>
+                    <p>or</p>
+                    <button id="selectPdfFile" class="btn">Select PDF</button>
+                    <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;">
+                </div>
+                
+                <div class="settings-panel">
+                    <h3><i class="fas fa-cog"></i> DOC Settings</h3>
+                    
+                    <div class="form-group">
+                        <label for="docFont">Font Family:</label>
+                        <select id="docFont" class="form-control">
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Calibri">Calibri</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="docFontSize">Font Size (pt):</label>
+                        <input type="range" id="docFontSize" min="8" max="24" value="12" class="slider">
+                        <span id="docFontSizeValue">12 pt</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="docLineSpacing">Line Spacing:</label>
+                        <select id="docLineSpacing" class="form-control">
+                            <option value="1">Single</option>
+                            <option value="1.15">1.15</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">Double</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="docFileName">DOC Name:</label>
+                        <input type="text" id="docFileName" class="form-control" placeholder="output.docx">
+                    </div>
+                </div>
+                
+                <div class="preview-section">
+                    <h3><i class="fas fa-eye"></i> Preview</h3>
+                    <div class="preview-container" id="pdfPreviewContainer">
+                        <p>No PDF selected yet</p>
+                    </div>
+                    <div class="preview-controls">
+                        <button id="clearPdfFile" class="btn btn-outline"><i class="fas fa-trash"></i> Clear File</button>
+                        <button id="generateDoc" class="btn" disabled><i class="fas fa-file-word"></i> Convert to DOC</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="file-info" id="fileInfo">
+            <!-- File info will be added here dynamically -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
