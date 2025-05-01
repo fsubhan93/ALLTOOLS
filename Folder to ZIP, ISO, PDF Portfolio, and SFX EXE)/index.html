@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Converter | ALLTOOLS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-folder"></i> Folder Converter</h1>
+            <p>Convert folders to various formats directly in your browser</p>
+        </header>
+
+        <div class="converter-box">
+            <div class="upload-area" id="dropArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop Folder Here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="folderInput" webkitdirectory directory multiple>
+            </div>
+
+            <div class="options">
+                <div class="option">
+                    <input type="radio" name="format" id="zip" value="zip" checked>
+                    <label for="zip">
+                        <i class="fas fa-file-archive"></i>
+                        <span>ZIP Archive</span>
+                    </label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="format" id="pdf" value="pdf">
+                    <label for="pdf">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>PDF Portfolio</span>
+                    </label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="format" id="iso" value="iso">
+                    <label for="iso">
+                        <i class="fas fa-compact-disc"></i>
+                        <span>ISO Image</span>
+                    </label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="format" id="exe" value="exe">
+                    <label for="exe">
+                        <i class="fas fa-file-code"></i>
+                        <span>SFX EXE (Windows)</span>
+                    </label>
+                </div>
+            </div>
+
+            <button id="convertBtn" class="convert-btn">Convert Folder</button>
+            <div class="status" id="status"></div>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ol>
+                <li>Select a folder (Chrome/Firefox/Edge only)</li>
+                <li>Choose output format</li>
+                <li>Click "Convert Folder"</li>
+                <li>Download your converted file</li>
+            </ol>
+            <p class="note">Note: All processing happens in your browser. Your files are never uploaded to any server.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+                      </html>
