@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Cutter & Merger | ALLTOOLS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-film"></i> Video Cutter & Merger</h1>
+            <p>Trim, cut, and merge videos directly in your browser - 100% free!</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="trim">✂️ Trim Video</button>
+            <button class="tab-btn" data-tab="merge">🎞️ Merge Videos</button>
+        </div>
+
+        <!-- Trim Tab -->
+        <div class="tab-content active" id="trim">
+            <div class="upload-area" id="trimDropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop Video</h3>
+                <p>MP4, WebM, MOV (Max 500MB)</p>
+                <input type="file" id="trimFileInput" accept="video/*">
+            </div>
+
+            <div class="video-preview" id="trimPreview">
+                <video controls id="trimVideo"></video>
+                <div class="trim-controls">
+                    <div class="time-inputs">
+                        <div>
+                            <label>Start Time (s)</label>
+                            <input type="number" id="startTime" min="0" value="0" step="1">
+                        </div>
+                        <div>
+                            <label>End Time (s)</label>
+                            <input type="number" id="endTime" step="1">
+                        </div>
+                    </div>
+                    <div class="range-slider">
+                        <input type="range" id="trimRange" min="0" max="100" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <button id="trimBtn" class="action-btn">
+                <i class="fas fa-cut"></i> Trim Video
+            </button>
+        </div>
+
+        <!-- Merge Tab -->
+        <div class="tab-content" id="merge">
+            <div class="upload-area" id="mergeDropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop Videos to Merge</h3>
+                <p>Select 2+ videos (MP4, WebM, MOV)</p>
+                <input type="file" id="mergeFileInput" accept="video/*" multiple>
+            </div>
+
+            <div class="video-list" id="videoList"></div>
+
+            <div class="merge-options">
+                <label for="mergeOrder">Merge Order:</label>
+                <select id="mergeOrder">
+                    <option value="sequence">In sequence (1, 2, 3)</option>
+                    <option value="alphabetical">Alphabetical</option>
+                </select>
+            </div>
+
+            <button id="mergeBtn" class="action-btn">
+                <i class="fas fa-object-group"></i> Merge Videos
+            </button>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+            <span id="progressText">0%</span>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="features">
+            <h3><i class="fas fa-star"></i> Features</h3>
+            <ul>
+                <li><i class="fas fa-check"></i> No watermarks or ads</li>
+                <li><i class="fas fa-check"></i> Processed locally (no uploads)</li>
+                <li><i class="fas fa-check"></i> Support for HD videos</li>
+                <li><i class="fas fa-check"></i> Fast processing with WebAssembly</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FFmpeg for video processing -->
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
