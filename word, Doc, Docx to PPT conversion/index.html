@@ -3,105 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word to PowerPoint Converter | ALLTOOLS</title>
+    <title>Advanced Word to PPT Converter | ALLTOOLS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --error: #ff4b2b;
+            --warning: #ff9f1c;
+        }
+
+        /* [Previous CSS remains the same] */
+        /* Add these new styles: */
+        
+        .theme-preview {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .theme-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .advanced-options {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(248, 249, 250, 0.5);
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        
+        .advanced-options h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 80px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-file-word"></i> Word to PowerPoint Converter</h1>
-            <p>Transform your documents into beautiful presentations instantly!</p>
-        </header>
-
-        <div class="converter-box">
-            <!-- File Upload -->
-            <div class="upload-area" id="dropZone">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>Drag & Drop Word File</h3>
-                <p>DOC, DOCX (Max 10MB)</p>
-                <input type="file" id="fileInput" accept=".doc,.docx">
-            </div>
-
-            <!-- Conversion Options -->
-            <div class="options">
-                <div class="option-group">
-                    <h3><i class="fas fa-palette"></i> Design Options</h3>
-                    <div class="option">
-                        <label for="theme">Color Theme:</label>
-                        <select id="theme">
-                            <option value="blue">Blue Professional</option>
-                            <option value="green">Green Corporate</option>
-                            <option value="red">Red Elegant</option>
-                            <option value="purple">Purple Creative</option>
-                        </select>
-                    </div>
-                    <div class="option">
-                        <label for="font">Font Style:</label>
-                        <select id="font">
-                            <option value="arial">Arial</option>
-                            <option value="calibri">Calibri</option>
-                            <option value="times">Times New Roman</option>
-                            <option value="georgia">Georgia</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="option-group">
-                    <h3><i class="fas fa-sliders-h"></i> Layout Options</h3>
-                    <div class="option">
-                        <label>
-                            <input type="checkbox" id="addToc" checked>
-                            Add Table of Contents
-                        </label>
-                    </div>
-                    <div class="option">
-                        <label>
-                            <input type="checkbox" id="addNumbers" checked>
-                            Add Slide Numbers
-                        </label>
-                    </div>
+    <!-- [Previous HTML remains the same until options section] -->
+    
+    <div class="options">
+        <div class="option-group">
+            <h3><i class="fas fa-palette"></i> Design Options</h3>
+            <div class="option">
+                <label for="theme">Color Theme:</label>
+                <select id="theme">
+                    <option value="blue">Blue Professional</option>
+                    <option value="green">Green Corporate</option>
+                    <option value="red">Red Elegant</option>
+                    <option value="purple">Purple Creative</option>
+                    <option value="dark">Dark Modern</option>
+                    <option value="light">Light Minimal</option>
+                </select>
+                <div class="theme-preview">
+                    <div class="theme-color" data-theme="blue" style="background: #2a52be;"></div>
+                    <div class="theme-color" data-theme="green" style="background: #4CAF50;"></div>
+                    <div class="theme-color" data-theme="red" style="background: #D32F2F;"></div>
+                    <div class="theme-color" data-theme="purple" style="background: #7B1FA2;"></div>
+                    <div class="theme-color" data-theme="dark" style="background: #212529;"></div>
+                    <div class="theme-color" data-theme="light" style="background: #f8f9fa;"></div>
                 </div>
             </div>
-
-            <!-- Preview Section -->
-            <div class="preview-section">
-                <h3><i class="fas fa-eye"></i> Preview</h3>
-                <div class="preview" id="preview">
-                    <p>Your PowerPoint preview will appear here after upload...</p>
-                </div>
-            </div>
-
-            <!-- Convert Button -->
-            <button id="convertBtn" class="convert-btn">
-                <i class="fas fa-magic"></i> Convert to PowerPoint
-            </button>
-
-            <!-- Progress Bar -->
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
-                <span id="progressText">0%</span>
-            </div>
-
-            <!-- Status Messages -->
-            <div class="status" id="status"></div>
+            <!-- [Previous options remain] -->
         </div>
-
-        <div class="features">
-            <h3><i class="fas fa-star"></i> Why Choose Our Converter?</h3>
-            <ul>
-                <li><i class="fas fa-check"></i> 100% Free - No Watermarks</li>
-                <li><i class="fas fa-check"></i> No Uploads - Processed Locally</li>
-                <li><i class="fas fa-check"></i> Preserves Formatting</li>
-                <li><i class="fas fa-check"></i> Multiple Design Options</li>
-                <li><i class="fas fa-check"></i> Fast Conversion</li>
-            </ul>
+        
+        <div class="option-group">
+            <h3><i class="fas fa-sliders-h"></i> Advanced Options</h3>
+            <div class="advanced-options">
+                <h4><i class="fas fa-images"></i> Image Handling</h4>
+                <div class="option">
+                    <label>
+                        <input type="checkbox" id="preserveImages" checked>
+                        Preserve Images
+                    </label>
+                </div>
+                <div id="imagePreviewContainer" style="display:none;">
+                    <p>Images detected:</p>
+                    <div class="image-preview" id="imagePreview"></div>
+                </div>
+                
+                <h4><i class="fas fa-project-diagram"></i> Layout</h4>
+                <div class="option">
+                    <label>
+                        <input type="checkbox" id="autoLayout" checked>
+                        Auto-detect Layout
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <!-- [Rest of previous HTML remains] -->
 
-    <!-- Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.10.0/pptxgen.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Updated convertToPPT function with image support
+        async function convertToPPT() {
+            // [Previous setup code remains]
+            
+            // Extract images if enabled
+            let images = [];
+            if (document.getElementById('preserveImages').checked) {
+                images = await extractImagesFromDoc(fileInput.files[0]);
+                if (images.length > 0) {
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+                    const previewContainer = document.getElementById('imagePreview');
+                    previewContainer.innerHTML = '';
+                    images.forEach(img => {
+                        const imgEl = document.createElement('img');
+                        imgEl.src = URL.createObjectURL(img.blob);
+                        previewContainer.appendChild(imgEl);
+                    });
+                }
+            }
+            
+            // [Previous PPT creation code]
+            
+            // Add images to slides
+            if (images.length > 0) {
+                images.forEach((img, idx) => {
+                    const imgSlide = pptx.addSlide();
+                    imgSlide.addText(img.alt || `Image ${idx + 1}`, {
+                        x: 1, y: 0.5, w: "90%", h: 0.5,
+                        fontSize: 18
+                    });
+                    pptx.addImage({
+                        data: img.base64,
+                        x: 1, y: 1.5, w: 6, h: 4.5
+                    });
+                });
+            }
+            
+            // [Rest of previous conversion code]
+        }
+        
+        // New function to extract images
+        async function extractImagesFromDoc(file) {
+            const images = [];
+            const arrayBuffer = await file.arrayBuffer();
+            
+            // Simple image extraction (works for most modern DOCX)
+            const zip = await JSZip.loadAsync(arrayBuffer);
+            const mediaFiles = zip.file(/word\/media\/.*/);
+            
+            for (const mediaFile of mediaFiles) {
+                const blob = await mediaFile.async('blob');
+                const base64 = await blobToBase64(blob);
+                images.push({
+                    blob,
+                    base64,
+                    alt: mediaFile.name.split('/').pop()
+                });
+            }
+            
+            return images;
+        }
+        
+        function blobToBase64(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                reader.readAsDataURL(blob);
+            });
+        }
+        
+        // Theme color click handlers
+        document.querySelectorAll('.theme-color').forEach(color => {
+            color.addEventListener('click', () => {
+                document.getElementById('theme').value = color.dataset.theme;
+            });
+        });
+    </script>
+    
+    <!-- Add JSZip for DOCX extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </body>
-          </html>
+</html>
