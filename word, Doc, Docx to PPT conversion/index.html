@@ -1,1 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word to PowerPoint Converter | ALLTOOLS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-word"></i> Word to PowerPoint Converter</h1>
+            <p>Transform your documents into beautiful presentations instantly!</p>
+        </header>
 
+        <div class="converter-box">
+            <!-- File Upload -->
+            <div class="upload-area" id="dropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Drag & Drop Word File</h3>
+                <p>DOC, DOCX (Max 10MB)</p>
+                <input type="file" id="fileInput" accept=".doc,.docx">
+            </div>
+
+            <!-- Conversion Options -->
+            <div class="options">
+                <div class="option-group">
+                    <h3><i class="fas fa-palette"></i> Design Options</h3>
+                    <div class="option">
+                        <label for="theme">Color Theme:</label>
+                        <select id="theme">
+                            <option value="blue">Blue Professional</option>
+                            <option value="green">Green Corporate</option>
+                            <option value="red">Red Elegant</option>
+                            <option value="purple">Purple Creative</option>
+                        </select>
+                    </div>
+                    <div class="option">
+                        <label for="font">Font Style:</label>
+                        <select id="font">
+                            <option value="arial">Arial</option>
+                            <option value="calibri">Calibri</option>
+                            <option value="times">Times New Roman</option>
+                            <option value="georgia">Georgia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <h3><i class="fas fa-sliders-h"></i> Layout Options</h3>
+                    <div class="option">
+                        <label>
+                            <input type="checkbox" id="addToc" checked>
+                            Add Table of Contents
+                        </label>
+                    </div>
+                    <div class="option">
+                        <label>
+                            <input type="checkbox" id="addNumbers" checked>
+                            Add Slide Numbers
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <h3><i class="fas fa-eye"></i> Preview</h3>
+                <div class="preview" id="preview">
+                    <p>Your PowerPoint preview will appear here after upload...</p>
+                </div>
+            </div>
+
+            <!-- Convert Button -->
+            <button id="convertBtn" class="convert-btn">
+                <i class="fas fa-magic"></i> Convert to PowerPoint
+            </button>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+                <span id="progressText">0%</span>
+            </div>
+
+            <!-- Status Messages -->
+            <div class="status" id="status"></div>
+        </div>
+
+        <div class="features">
+            <h3><i class="fas fa-star"></i> Why Choose Our Converter?</h3>
+            <ul>
+                <li><i class="fas fa-check"></i> 100% Free - No Watermarks</li>
+                <li><i class="fas fa-check"></i> No Uploads - Processed Locally</li>
+                <li><i class="fas fa-check"></i> Preserves Formatting</li>
+                <li><i class="fas fa-check"></i> Multiple Design Options</li>
+                <li><i class="fas fa-check"></i> Fast Conversion</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.10.0/pptxgen.min.js"></script>
+    <script src="script.js"></script>
+</body>
+          </html>
