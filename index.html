@@ -440,4 +440,189 @@
                     <i class="fas fa-bars"></i>
                 </div>
             </nav>
-        </div
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Your Ultimate Online Tools Collection</h2>
+            <p>Access hundreds of free tools for document conversion, media editing, file compression and more - all in one secure vault!</p>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search for tools...">
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="categories">
+        <div class="container">
+            <div class="section-title">
+                <h2>Explore Our Tools</h2>
+                <p>All your essential online tools organized into categories for easy access</p>
+            </div>
+            
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">All</button>
+                <button class="category-tab" data-category="document">Documents</button>
+                <button class="category-tab" data-category="image">Images</button>
+                <button class="category-tab" data-category="video">Video</button>
+                <button class="category-tab" data-category="archive">Archive</button>
+            </div>
+            
+            <div class="tools-grid" id="toolsGrid">
+                <!-- Document Tools -->
+                <a href="Excel%20to%20pdf" class="tool-card" data-category="document">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Excel to PDF</h3>
+                        <p>Convert your Excel spreadsheets to PDF format while preserving formatting and layout.</p>
+                    </div>
+                </a>
+                
+                <a href="PowerPoint%20to%20pdf" class="tool-card" data-category="document">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>PowerPoint to PDF</h3>
+                        <p>Transform your PowerPoint presentations into PDF documents with a single click.</p>
+                    </div>
+                </a>
+                
+                <a href="doc%20to%20pdf%20pdf%20to%20doc" class="tool-card" data-category="document">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-word"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Word to PDF</h3>
+                        <p>Convert Word documents to PDF format while maintaining all your formatting.</p>
+                    </div>
+                </a>
+                
+                <a href="Merge%20and%20split%20pdf" class="tool-card" data-category="document">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Merge & Split PDF</h3>
+                        <p>Combine multiple PDFs into one or split large PDFs into smaller documents.</p>
+                    </div>
+                </a>
+                
+                <a href="compress%20and%20edit%20pdf" class="tool-card" data-category="document">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Compress & Edit PDF</h3>
+                        <p>Reduce PDF file size and make quick edits to your PDF documents.</p>
+                    </div>
+                </a>
+                
+                <a href="word%2C%20Doc%2C%20Dock%20to%20PPT%20conversion" class="tool-card" data-category="document">
+                    <div class="tool-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Word to PPT</h3>
+                        <p>Convert Word documents into PowerPoint presentations automatically.</p>
+                    </div>
+                </a>
+                
+                <!-- Image Tools -->
+                <a href="Resize%20%26%20compress%20images" class="tool-card" data-category="image">
+                    <div class="tool-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Resize & Compress Images</h3>
+                        <p>Adjust image dimensions and reduce file size without losing quality.</p>
+                    </div>
+                </a>
+                
+                <a href="jpg%20to%20png%2C%20png%20to%20jpg" class="tool-card" data-category="image">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>JPG to PNG (and vice versa)</h3>
+                        <p>Convert between JPG and PNG image formats with ease.</p>
+                    </div>
+                </a>
+                
+                <a href="pdf%20to%20jpg%2C%20jpg%20to%20pdf" class="tool-card" data-category="image">
+                    <div class="tool-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>PDF to JPG (and vice versa)</h3>
+                        <p>Convert PDF pages to JPG images or combine JPGs into a PDF document.</p>
+                    </div>
+                </a>
+                
+                <!-- Video Tools -->
+                <a href="Trim%20%2Ccut%20%2C%20merge%20video" class="tool-card" data-category="video">
+                    <div class="tool-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Trim, Cut & Merge Video</h3>
+                        <p>Edit your videos by trimming, cutting segments or merging clips together.</p>
+                    </div>
+                </a>
+                
+                <a href="video%20to%20mp3" class="tool-card" data-category="video">
+                    <div class="tool-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Video to MP3</h3>
+                        <p>Extract audio from video files and save as high-quality MP3 format.</p>
+                    </div>
+                </a>
+                
+                <a href="youtube%20analytics" class="tool-card" data-category="video">
+                    <div class="tool-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>YouTube Analytics</h3>
+                        <p>Analyze your YouTube channel performance and video statistics.</p>
+                    </div>
+                </a>
+                
+                <!-- Archive Tools -->
+                <a href="Folder%20to%20ZIP%2C%20ISO%2C%20PDF%20Portfolio%2C%20and%20SFX%20EXE" class="tool-card" data-category="archive">
+                    <div class="tool-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Folder to ZIP/ISO/PDF/SFX</h3>
+                        <p>Convert folders to various archive formats including ZIP, ISO, PDF Portfolio and SFX EXE.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose ToolVault?</h2>
+                <p>Discover the benefits of using our all-in-one tools platform</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Secure Processing</h3>
+                    <p>All file processing happens in your browser. We never upload your files to our servers.</p>
+                </div>
+                
+                <div clas
