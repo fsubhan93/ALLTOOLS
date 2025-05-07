@@ -1,384 +1,261 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize jsPDF
-    const { jsPDF } = window.jspdf;
-    
-    // DOM elements
+    // DOM Elements
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
-    const selectFileBtn = document.getElementById('selectFile');
-    const clearFileBtn = document.getElementById('clearFile');
-    const generatePdfBtn = document.getElementById('generatePdf');
-    const previewContainer = document.getElementById('previewContainer');
-    const fileInfoContainer = document.getElementById('fileInfo');
+    const selectFilesBtn = document.getElementById('selectFiles');
+    const convertBtn = document.getElementById('convertBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const toggleAdvancedBtn = document.getElementById('toggleAdvanced');
+    const advancedOptions = document.getElementById('advancedOptions');
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsGrid = document.getElementById('resultsGrid');
+    const downloadAllBtn = document.getElementById('downloadAll');
+    const clearAllBtn = document.getElementById('clearAll');
     
-    // Settings elements
-    const pageSizeSelect = document.getElementById('pageSize');
-    const customSizeGroup = document.getElementById('customSizeGroup');
-    const customWidthInput = document.getElementById('customWidth');
-    const customHeightInput = document.getElementById('customHeight');
-    const pageOrientationSelect = document.getElementById('pageOrientation');
-    const marginSizeSlider = document.getElementById('marginSize');
-    const marginValueSpan = document.getElementById('marginValue');
-    const fontSizeSlider = document.getElementById('fontSize');
-    const fontSizeValueSpan = document.getElementById('fontSizeValue');
-    const headerColorInput = document.getElementById('headerColor');
-    const cellPaddingSlider = document.getElementById('cellPadding');
-    const cellPaddingValueSpan = document.getElementById('cellPaddingValue');
-    const showGridSelect = document.getElementById('showGrid');
-    const pdfNameInput = document.getElementById('pdfName');
+    // Files array to store uploaded files
+    let files = [];
     
-    // Store uploaded file data
-    let excelData = null;
-    let currentSheetIndex = 0;
+    // Initialize JS PDF
+    const { jsPDF } = window.jspdf;
     
-    // Event listeners for drag and drop
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-    });
+    // Event Listeners
+    selectFilesBtn.addEventListener('click', () => fileInput.click());
     
-    function preventDefaults(e) {
+    fileInput.addEventListener('change', handleFileSelect);
+    
+    dropArea.addEventListener('dragover', (e) => {
         e.preventDefault();
-        e.stopPropagation();
-    }
-    
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, highlight, false);
+        dropArea.style.borderColor = '#3a57e8';
+        dropArea.style.backgroundColor = 'rgba(58, 87, 232, 0.05)';
     });
     
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, unhighlight, false);
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.style.borderColor = '#e0e0e0';
+        dropArea.style.backgroundColor = 'transparent';
     });
     
-    function highlight() {
-        dropArea.classList.add('highlight');
-    }
-    
-    function unhighlight() {
-        dropArea.classList.remove('highlight');
-    }
-    
-    dropArea.addEventListener('drop', handleDrop, false);
-    
-    function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        if (files.length) {
-            handleFile(files[0]);
-        }
-    }
-    
-    // File input click
-    selectFileBtn.addEventListener('click', () => {
-        fileInput.click();
-    });
-    
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length) {
-            handleFile(fileInput.files[0]);
-        }
-    });
-    
-    // Clear file button
-    clearFileBtn.addEventListener('click', () => {
-        excelData = null;
-        updateFileInfo();
-        updatePreview();
-        generatePdfBtn.disabled = true;
-        fileInput.value = '';
-    });
-    
-    // Generate PDF button
-    generatePdfBtn.addEventListener('click', generatePdf);
-    
-    // Settings change listeners
-    pageSizeSelect.addEventListener('change', function() {
-        customSizeGroup.style.display = this.value === 'custom' ? 'block' : 'none';
-    });
-    
-    marginSizeSlider.addEventListener('input', function() {
-        marginValueSpan.textContent = `${this.value} mm`;
-    });
-    
-    fontSizeSlider.addEventListener('input', function() {
-        fontSizeValueSpan.textContent = `${this.value} pt`;
-        updatePreview();
-    });
-    
-    cellPaddingSlider.addEventListener('input', function() {
-        cellPaddingValueSpan.textContent = `${this.value} px`;
-    });
-    
-    // Handle uploaded file
-    function handleFile(file) {
-        // Check if file is an Excel file
-        if (!file.name.match(/\.(xlsx|xls|csv)$/i)) {
-            alert('Please upload an Excel file (.xlsx, .xls, .csv)');
-            return;
-        }
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropArea.style.borderColor = '#e0e0e0';
+        dropArea.style.backgroundColor = 'transparent';
         
-        const reader = new FileReader();
+        if (e.dataTransfer.files.length) {
+            files = Array.from(e.dataTransfer.files);
+            updateFileList();
+        }
+    });
+    
+    toggleAdvancedBtn.addEventListener('click', () => {
+        advancedOptions.style.display = advancedOptions.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    convertBtn.addEventListener('click', convertToPDF);
+    
+    resetBtn.addEventListener('click', resetConverter);
+    
+    downloadAllBtn.addEventListener('click', downloadAllFiles);
+    
+    clearAllBtn.addEventListener('click', clearAllFiles);
+    
+    // Functions
+    function handleFileSelect(e) {
+        files = Array.from(e.target.files);
+        updateFileList();
+    }
+    
+    function updateFileList() {
+        if (files.length > 0) {
+            convertBtn.disabled = false;
+        } else {
+            convertBtn.disabled = true;
+        }
+    }
+    
+    async function convertToPDF() {
+        if (files.length === 0) return;
         
-        reader.onload = function(e) {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
+        
+        try {
+            // Process each file
+            for (const file of files) {
+                await processFile(file);
+            }
             
-            // Extract data from all sheets
-            excelData = {
-                fileName: file.name,
-                fileSize: formatFileSize(file.size),
-                sheets: [],
-                sheetNames: workbook.SheetNames
+            // Show results section
+            resultsSection.style.display = 'block';
+            
+            // Scroll to results
+            setTimeout(() => {
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+            
+        } catch (error) {
+            console.error('Conversion error:', error);
+            alert('An error occurred during conversion. Please try again.');
+        } finally {
+            convertBtn.disabled = false;
+            convertBtn.innerHTML = '<i class="fas fa-file-export"></i> Convert to PDF';
+        }
+    }
+    
+    async function processFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get conversion options
+                    const options = getConversionOptions();
+                    
+                    // Process each worksheet
+                    workbook.SheetNames.forEach(sheetName => {
+                        const worksheet = workbook.Sheets[sheetName];
+                        const pdf = new jsPDF({
+                            orientation: options.pageLayout === 'landscape' ? 'landscape' : 'portrait',
+                            unit: 'mm',
+                            format: options.pageSize
+                        });
+                        
+                        // Convert worksheet to HTML
+                        const html = XLSX.utils.sheet_to_html(worksheet, {
+                            showGridLines: options.gridlines === 'show'
+                        });
+                        
+                        // Add HTML to PDF
+                        pdf.html(html, {
+                            callback: function(pdf) {
+                                // Save PDF
+                                const pdfBlob = pdf.output('blob');
+                                const pdfUrl = URL.createObjectURL(pdfBlob);
+                                
+                                // Add to results
+                                addResultToGrid(file.name, pdfUrl, pdfBlob);
+                                resolve();
+                            },
+                            x: 10,
+                            y: 10,
+                            width: options.pageLayout === 'landscape' ? 277 : 190, // A4 dimensions in mm
+                            windowWidth: 1000
+                        });
+                    });
+                } catch (error) {
+                    reject(error);
+                }
             };
             
-            workbook.SheetNames.forEach(sheetName => {
-                const worksheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                excelData.sheets.push(jsonData);
-            });
-            
-            updateFileInfo();
-            updatePreview();
-            generatePdfBtn.disabled = false;
-        };
-        
-        reader.readAsArrayBuffer(file);
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
     }
     
-    // Format file size
+    function getConversionOptions() {
+        return {
+            pageLayout: document.getElementById('pageLayout').value,
+            pageSize: document.getElementById('pageSize').value,
+            gridlines: document.getElementById('gridlines').value,
+            headers: document.getElementById('headers').value,
+            fitToPage: document.getElementById('fitToPage').checked,
+            repeatHeaders: document.getElementById('repeatHeaders').checked,
+            blackAndWhite: document.getElementById('blackAndWhite').checked,
+            includeComments: document.getElementById('includeComments').checked
+        };
+    }
+    
+    function addResultToGrid(originalName, pdfUrl, pdfBlob) {
+        const fileName = originalName.replace(/\.[^/.]+$/, '') + '.pdf';
+        const fileSize = formatFileSize(pdfBlob.size);
+        
+        const resultCard = document.createElement('div');
+        resultCard.className = 'result-card';
+        resultCard.innerHTML = `
+            <div class="result-card-icon">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="result-card-info">
+                <h3>${fileName}</h3>
+                <p>${fileSize}</p>
+            </div>
+            <div class="result-card-actions">
+                <button class="download-btn" data-url="${pdfUrl}" data-filename="${fileName}">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button class="preview-btn" data-url="${pdfUrl}">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        `;
+        
+        resultsGrid.appendChild(resultCard);
+        
+        // Add event listeners to new buttons
+        resultCard.querySelector('.download-btn').addEventListener('click', (e) => {
+            downloadPDF(e.target.closest('button').dataset.url, e.target.closest('button').dataset.filename);
+        });
+        
+        resultCard.querySelector('.preview-btn').addEventListener('click', (e) => {
+            previewPDF(e.target.closest('button').dataset.url);
+        });
+    }
+    
+    function downloadPDF(url, filename) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    
+    function previewPDF(url) {
+        window.open(url, '_blank');
+    }
+    
+    function downloadAllFiles() {
+        const downloadButtons = resultsGrid.querySelectorAll('.download-btn');
+        downloadButtons.forEach(btn => {
+            const url = btn.dataset.url;
+            const filename = btn.dataset.filename;
+            downloadPDF(url, filename);
+        });
+    }
+    
+    function clearAllFiles() {
+        resultsGrid.innerHTML = '';
+        resultsSection.style.display = 'none';
+        files = [];
+        fileInput.value = '';
+        updateFileList();
+    }
+    
+    function resetConverter() {
+        // Reset form elements to default values
+        document.getElementById('pageLayout').value = 'portrait';
+        document.getElementById('pageSize').value = 'a4';
+        document.getElementById('gridlines').value = 'show';
+        document.getElementById('headers').value = 'include';
+        document.getElementById('fitToPage').checked = false;
+        document.getElementById('repeatHeaders').checked = false;
+        document.getElementById('blackAndWhite').checked = false;
+        document.getElementById('includeComments').checked = false;
+        
+        // Hide advanced options
+        advancedOptions.style.display = 'none';
+    }
+    
     function formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
     }
     
-    // Update file info in UI
-    function updateFileInfo() {
-        fileInfoContainer.innerHTML = '';
-        
-        if (!excelData) {
-            fileInfoContainer.innerHTML = '<p class="empty-message">No file uploaded yet</p>';
-            return;
-        }
-        
-        const fileInfoHTML = `
-            <h3><i class="fas fa-file-excel"></i> File Information</h3>
-            <div class="file-details">
-                <div class="file-detail">
-                    <label>File Name:</label>
-                    <p>${excelData.fileName}</p>
-                </div>
-                <div class="file-detail">
-                    <label>File Size:</label>
-                    <p>${excelData.fileSize}</p>
-                </div>
-                <div class="file-detail">
-                    <label>Sheets:</label>
-                    <p>${excelData.sheetNames.length}</p>
-                </div>
-                <div class="file-detail">
-                    <label>Rows in Current Sheet:</label>
-                    <p>${excelData.sheets[currentSheetIndex].length}</p>
-                </div>
-            </div>
-            <div class="sheet-selector">
-                <label>Select Sheet:</label>
-                <div class="sheet-buttons" id="sheetButtons">
-                    ${excelData.sheetNames.map((name, index) => `
-                        <button class="sheet-btn ${index === currentSheetIndex ? 'active' : ''}" 
-                                data-index="${index}">
-                            ${name}
-                        </button>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-        
-        fileInfoContainer.innerHTML = fileInfoHTML;
-        
-        // Add event listeners for sheet buttons
-        document.querySelectorAll('.sheet-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                currentSheetIndex = parseInt(this.getAttribute('data-index'));
-                updateFileInfo();
-                updatePreview();
-            });
-        });
-    }
-    
-    // Update preview
-    function updatePreview() {
-        previewContainer.innerHTML = '';
-        
-        if (!excelData) {
-            previewContainer.innerHTML = '<p>No Excel file selected yet</p>';
-            return;
-        }
-        
-        const sheetData = excelData.sheets[currentSheetIndex];
-        if (sheetData.length === 0) {
-            previewContainer.innerHTML = '<p>Selected sheet is empty</p>';
-            return;
-        }
-        
-        // Create preview table
-        const table = document.createElement('table');
-        table.className = 'preview-table';
-        
-        // Create header row
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        
-        // Use first row as headers if available
-        const headers = sheetData[0] || [];
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header !== undefined ? header : '';
-            th.style.fontSize = `${fontSizeSlider.value}px`;
-            headerRow.appendChild(th);
-        });
-        
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-        
-        // Create body rows (show up to 10 rows for preview)
-        const tbody = document.createElement('tbody');
-        const maxPreviewRows = Math.min(10, sheetData.length - 1);
-        
-        for (let i = 1; i <= maxPreviewRows; i++) {
-            const rowData = sheetData[i] || [];
-            const row = document.createElement('tr');
-            
-            headers.forEach((_, colIndex) => {
-                const td = document.createElement('td');
-                td.textContent = rowData[colIndex] !== undefined ? rowData[colIndex] : '';
-                td.style.fontSize = `${fontSizeSlider.value}px`;
-                td.style.padding = `${cellPaddingSlider.value}px`;
-                row.appendChild(td);
-            });
-            
-            tbody.appendChild(row);
-        }
-        
-        table.appendChild(tbody);
-        previewContainer.appendChild(table);
-        
-        // Add note about preview limits
-        if (sheetData.length > maxPreviewRows + 1) {
-            const note = document.createElement('p');
-            note.style.marginTop = '10px';
-            note.style.fontSize = '14px';
-            note.style.color = 'var(--light-text)';
-            note.textContent = `Preview showing first ${maxPreviewRows} rows of ${sheetData.length - 1} total rows`;
-            previewContainer.appendChild(note);
-        }
-    }
-    
-    // Get page size in millimeters
-    function getPageSizeInMM() {
-        let width, height;
-        
-        switch (pageSizeSelect.value) {
-            case 'a4':
-                width = 210;
-                height = 297;
-                break;
-            case 'letter':
-                width = 215.9;
-                height = 279.4;
-                break;
-            case 'legal':
-                width = 215.9;
-                height = 355.6;
-                break;
-            case 'custom':
-                width = parseFloat(customWidthInput.value) || 210;
-                height = parseFloat(customHeightInput.value) || 297;
-                break;
-            default:
-                width = 210;
-                height = 297;
-        }
-        
-        if (pageOrientationSelect.value === 'landscape') {
-            return { width: Math.max(width, height), height: Math.min(width, height) };
-        } else {
-            return { width: Math.min(width, height), height: Math.max(width, height) };
-        }
-    }
-    
-    // Generate PDF
-    function generatePdf() {
-        if (!excelData) return;
-        
-        const pdfName = pdfNameInput.value.trim() || excelData.fileName.replace(/\.[^/.]+$/, "") + '.pdf';
-        const pdf = new jsPDF({
-            orientation: pageOrientationSelect.value,
-            unit: 'mm'
-        });
-        
-        const pageSize = getPageSizeInMM();
-        const margin = parseFloat(marginSizeSlider.value);
-        const fontSize = parseFloat(fontSizeSlider.value);
-        const headerColor = headerColorInput.value;
-        const cellPadding = parseFloat(cellPaddingSlider.value) / 3; // Approximate conversion from px to mm
-        const showGrid = showGridSelect.value === 'true';
-        
-        // Process current sheet
-        const sheetData = excelData.sheets[currentSheetIndex];
-        if (sheetData.length === 0) return;
-        
-        // Extract headers (use first row if available)
-        const headers = sheetData[0] || [];
-        
-        // Prepare data for autotable (skip header row if it exists)
-        const data = sheetData.slice(1).map(row => {
-            return headers.map((_, colIndex) => row[colIndex] !== undefined ? row[colIndex] : '');
-        });
-        
-        // PDF settings
-        pdf.autoTable({
-            head: [headers],
-            body: data,
-            startY: margin,
-            margin: { top: margin, right: margin, bottom: margin, left: margin },
-            styles: {
-                fontSize: fontSize,
-                cellPadding: cellPadding,
-                overflow: 'linebreak',
-                halign: 'left',
-                valign: 'middle'
-            },
-            headStyles: {
-                fillColor: headerColor,
-                textColor: '#ffffff',
-                fontStyle: 'bold'
-            },
-            alternateRowStyles: {
-                fillColor: '#f8f9fa'
-            },
-            tableWidth: 'auto',
-            showHead: 'everyPage',
-            pageBreak: 'auto',
-            theme: showGrid ? 'grid' : 'plain',
-            didDrawPage: function(data) {
-                // Footer with page number
-                const pageCount = pdf.internal.getNumberOfPages();
-                for (let i = 1; i <= pageCount; i++) {
-                    pdf.setPage(i);
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(150);
-                    pdf.text(
-                        `Page ${i} of ${pageCount}`,
-                        pageSize.width - margin - 20,
-                        pageSize.height - margin + 10
-                    );
-                }
-            }
-        });
-        
-        // Save PDF
-        pdf.save(pdfName);
-    }
+    // Initialize
+    resetConverter();
+    updateFileList();
 });
