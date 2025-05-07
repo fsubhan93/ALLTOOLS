@@ -210,8 +210,24 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         
+        /* Colorful Tool Icons by Category */
+        .tool-card[data-category="document"] .tool-icon {
+            background: linear-gradient(135deg, #3a57e8 0%, #3498db 100%);
+        }
+        
+        .tool-card[data-category="image"] .tool-icon {
+            background: linear-gradient(135deg, #e74c3c 0%, #e67e22 100%);
+        }
+        
+        .tool-card[data-category="video"] .tool-icon {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+        
+        .tool-card[data-category="archive"] .tool-icon {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+        
         .tool-icon {
-            background: linear-gradient(135deg, var(--primary) 0%, #6a11cb 100%);
             color: white;
             padding: 2rem;
             text-align: center;
@@ -432,8 +448,8 @@
                 <div class="nav-links" id="navLinks">
                     <a href="#home">Home</a>
                     <a href="#features">Features</a>
-                    <a href="#" id="privacyLink">Privacy Policy</a>
-                    <a href="#" id="termsLink">Terms of Use</a>
+                    <a href="Privacy%20policy" id="privacyLink">Privacy Policy</a>
+                    <a href="terms%20of%20use" id="termsLink">Terms of Use</a>
                     <a href="#" id="contactLink">Contact Us</a>
                 </div>
                 <div class="mobile-menu" id="mobileMenu">
@@ -625,4 +641,167 @@
                     <p>All file processing happens in your browser. We never upload your files to our servers.</p>
                 </div>
                 
-                <div clas
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Our tools are optimized for speed, delivering results in seconds rather than minutes.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Comprehensive Toolkit</h3>
+                    <p>From documents to media to archives - we've got all your conversion needs covered.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>100% Free</h3>
+                    <p>All our tools are completely free to use with no hidden charges or subscriptions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>No Watermarks</h3>
+                    <p>Your converted files remain yours - we don't add any logos or watermarks.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Use our tools on any device - smartphones, tablets or computers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legal Pages Section -->
+    <section class="legal-section">
+        <div class="container">
+            <h3>Legal Information</h3>
+            <div class="legal-links">
+                <a href="Privacy%20policy">Privacy Policy</a>
+                <a href="terms%20of%20use">Terms of Use</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">DMCA</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>ToolVault</h3>
+                    <p>Your ultimate online tools collection for all file conversion and editing needs.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#">All Tools</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Document Tools</h3>
+                    <ul>
+                        <li><a href="Excel%20to%20pdf">Excel to PDF</a></li>
+                        <li><a href="PowerPoint%20to%20pdf">PPT to PDF</a></li>
+                        <li><a href="doc%20to%20pdf%20pdf%20to%20doc">Word to PDF</a></li>
+                        <li><a href="Merge%20and%20split%20pdf">Merge PDF</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="Privacy%20policy">Privacy Policy</a></li>
+                        <li><a href="terms%20of%20use">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 ToolVault. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Search Functionality Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navLinks = document.getElementById('navLinks');
+            
+            mobileMenu.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+            
+            // Category tabs functionality
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const toolCards = document.querySelectorAll('.tool-card');
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    const category = this.dataset.category;
+                    
+                    // Filter tools
+                    toolCards.forEach(card => {
+                        if (category === 'all' || card.dataset.category === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                toolCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const description = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
