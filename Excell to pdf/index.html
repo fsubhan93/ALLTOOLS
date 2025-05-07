@@ -3,112 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel to PDF Converter</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <title>Excel to PDF Converter | ToolVault</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1><i class="fas fa-file-pdf"></i> Excel to PDF Converter</h1>
-        <p class="subtitle">Convert your Excel files to PDF with custom settings</p>
-        
-        <div class="converter-box">
-            <div class="upload-area" id="dropArea">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>Drag & Drop Excel File Here</h3>
-                <p>or</p>
-                <button id="selectFile" class="btn">Select Excel File</button>
-                <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
-            </div>
-            
-            <div class="settings-panel">
-                <h3><i class="fas fa-cog"></i> PDF Settings</h3>
-                
-                <div class="form-group">
-                    <label for="pageSize">Page Size:</label>
-                    <select id="pageSize" class="form-control">
-                        <option value="a4">A4 (210 × 297 mm)</option>
-                        <option value="letter">Letter (8.5 × 11 in)</option>
-                        <option value="legal">Legal (8.5 × 14 in)</option>
-                        <option value="custom">Custom</option>
-                    </select>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <i class="fas fa-toolbox"></i>
+                    <h1>ToolVault</h1>
+                </a>
+                <div class="nav-links">
+                    <a href="#"><i class="fas fa-arrow-left"></i> Back to Tools</a>
                 </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="tool-header">
+            <div class="tool-icon">
+                <i class="fas fa-file-excel"></i>
+            </div>
+            <h1>Excel to PDF Converter</h1>
+            <p>Convert your Excel spreadsheets to high-quality PDF documents with perfect formatting</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="upload-section">
+                <div class="upload-box" id="dropArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop Excel Files Here</h3>
+                    <p>or</p>
+                    <button class="btn-primary" id="selectFiles">Select Files</button>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" multiple style="display: none;">
+                    <div class="supported-formats">
+                        <span>Supported formats: .xlsx, .xls, .csv</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options-section">
+                <h2><i class="fas fa-cog"></i> Conversion Options</h2>
                 
-                <div id="customSizeGroup" class="form-group" style="display: none;">
-                    <label for="customWidth">Custom Size (mm):</label>
-                    <div class="size-inputs">
-                        <input type="number" id="customWidth" class="form-control" placeholder="Width" min="1" value="210">
-                        <span>×</span>
-                        <input type="number" id="customHeight" class="form-control" placeholder="Height" min="1" value="297">
+                <div class="options-grid">
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3>Page Layout</h3>
+                        <select id="pageLayout">
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                            <option value="auto">Auto Detect</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-ruler-combined"></i>
+                        </div>
+                        <h3>Page Size</h3>
+                        <select id="pageSize">
+                            <option value="a4">A4 (210 × 297 mm)</option>
+                            <option value="letter">Letter (8.5 × 11 in)</option>
+                            <option value="legal">Legal (8.5 × 14 in)</option>
+                            <option value="a3">A3 (297 × 420 mm)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-border-all"></i>
+                        </div>
+                        <h3>Gridlines</h3>
+                        <select id="gridlines">
+                            <option value="show">Show Gridlines</option>
+                            <option value="hide">Hide Gridlines</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-heading"></i>
+                        </div>
+                        <h3>Headers/Footers</h3>
+                        <select id="headers">
+                            <option value="include">Include Headers</option>
+                            <option value="exclude">Exclude Headers</option>
+                        </select>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="pageOrientation">Orientation:</label>
-                    <select id="pageOrientation" class="form-control">
-                        <option value="portrait">Portrait</option>
-                        <option value="landscape">Landscape</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="marginSize">Margin Size (mm):</label>
-                    <input type="range" id="marginSize" min="0" max="50" value="10" class="slider">
-                    <span id="marginValue">10 mm</span>
-                </div>
-                
-                <div class="form-group">
-                    <label for="fontSize">Font Size (pt):</label>
-                    <input type="range" id="fontSize" min="6" max="24" value="10" class="slider">
-                    <span id="fontSizeValue">10 pt</span>
-                </div>
-                
-                <div class="form-group">
-                    <label for="headerColor">Header Color:</label>
-                    <input type="color" id="headerColor" value="#4a6bff">
-                </div>
-                
-                <div class="form-group">
-                    <label for="cellPadding">Cell Padding (px):</label>
-                    <input type="range" id="cellPadding" min="1" max="10" value="5" class="slider">
-                    <span id="cellPaddingValue">5 px</span>
-                </div>
-                
-                <div class="form-group">
-                    <label for="showGrid">Show Grid Lines:</label>
-                    <select id="showGrid" class="form-control">
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="pdfName">PDF Name:</label>
-                    <input type="text" id="pdfName" class="form-control" placeholder="output.pdf">
+                <div class="advanced-options">
+                    <button class="btn-secondary" id="toggleAdvanced">
+                        <i class="fas fa-sliders-h"></i> Advanced Options
+                    </button>
+                    
+                    <div class="advanced-content" id="advancedOptions">
+                        <div class="advanced-grid">
+                            <div class="advanced-option">
+                                <label>
+                                    <input type="checkbox" id="fitToPage"> Fit to Page Width
+                                </label>
+                            </div>
+                            <div class="advanced-option">
+                                <label>
+                                    <input type="checkbox" id="repeatHeaders"> Repeat Headers on Each Page
+                                </label>
+                            </div>
+                            <div class="advanced-option">
+                                <label>
+                                    <input type="checkbox" id="blackAndWhite"> Black and White
+                                </label>
+                            </div>
+                            <div class="advanced-option">
+                                <label>
+                                    <input type="checkbox" id="includeComments"> Include Comments
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="preview-section">
-                <h3><i class="fas fa-eye"></i> Preview</h3>
-                <div class="preview-container" id="previewContainer">
-                    <p>No Excel file selected yet</p>
-                </div>
-                <div class="preview-controls">
-                    <button id="clearFile" class="btn btn-outline"><i class="fas fa-trash"></i> Clear File</button>
-                    <button id="generatePdf" class="btn" disabled><i class="fas fa-file-pdf"></i> Generate PDF</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="file-info" id="fileInfo">
-            <!-- File info will be added here dynamically -->
-        </div>
-    </div>
 
+            <div class="action-section">
+                <button class="btn-convert" id="convertBtn">
+                    <i class="fas fa-file-export"></i> Convert to PDF
+                </button>
+                <button class="btn-secondary" id="resetBtn">
+                    <i class="fas fa-redo"></i> Reset Options
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2><i class="fas fa-file-download"></i> Your Converted Files</h2>
+            <div class="results-grid" id="resultsGrid">
+                <!-- Files will appear here after conversion -->
+            </div>
+            <div class="batch-actions">
+                <button class="btn-secondary" id="downloadAll">
+                    <i class="fas fa-download"></i> Download All
+                </button>
+                <button class="btn-secondary" id="clearAll">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2>Why Use Our Excel to PDF Converter?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Secure Processing</h3>
+                    <p>All conversions happen in your browser. Your files never leave your computer.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Fast Conversion</h3>
+                    <p>Convert large Excel files to PDF in seconds with our optimized engine.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Perfect Formatting</h3>
+                    <p>Preserve all your Excel formatting, formulas, and layout in the PDF output.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Works perfectly on all devices - smartphones, tablets and computers.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>ToolVault</h3>
+                    <p>Your ultimate online tools collection for all file conversion and editing needs.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">All Tools</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Document Tools</h3>
+                    <ul>
+                        <li><a href="#">Word to PDF</a></li>
+                        <li><a href="#">PPT to PDF</a></li>
+                        <li><a href="#">Excel to PDF</a></li>
+                        <li><a href="#">Merge PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 ToolVault. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
