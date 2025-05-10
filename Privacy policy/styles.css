@@ -1,0 +1,59 @@
+/* Additional Privacy Policy Specific Styles */
+.terms-content h3 {
+    color: #2c3e50;
+    font-size: 1.1em;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+/* Cookie Preference Center (example) */
+.cookie-prefs {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    border-left: 4px solid #e74c3c;
+}
+
+.cookie-category {
+    margin-bottom: 15px;
+}
+
+.cookie-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.cookie-toggle label {
+    font-weight: bold;
+}
+
+.cookie-desc {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+/* GDPR/CCPA Specific Elements */
+.data-request {
+    background-color: #e8f4fc;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.data-request button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.data-request button:hover {
+    background-color: #2980b9;
+}
